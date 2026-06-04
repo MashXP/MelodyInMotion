@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignQuest Sandbox - SignMusic Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      const errDiv = document.createElement('div');
+      errDiv.style.position = 'fixed';
+      errDiv.style.top = '10px';
+      errDiv.style.left = '10px';
+      errDiv.style.right = '10px';
+      errDiv.style.background = 'rgba(220, 38, 38, 0.95)';
+      errDiv.style.color = 'white';
+      errDiv.style.padding = '15px';
+      errDiv.style.borderRadius = '10px';
+      errDiv.style.zIndex = '99999';
+      errDiv.style.fontFamily = 'monospace';
+      errDiv.style.fontSize = '14px';
+      errDiv.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
+      errDiv.style.border = '2px solid #ef4444';
+      errDiv.innerHTML = '<strong>JS Error:</strong> ' + message + '<br><small>at ' + source + ':' + lineno + ':' + colno + '</small>';
+      document.body.appendChild(errDiv);
+      return false;
+    };
+  </script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="logo-area">
+          <span class="icon">🎵</span>
+          <h1>SignQuest <span class="badge" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));">Music</span></h1>
+        </div>
+        <a href="index.html" style="text-decoration: none; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='var(--text-primary)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.color='var(--text-secondary)';">
+          🤟 Fingerspelling Sandbox
+        </a>
+      </div>
+      <p class="tagline">Play musical notes in real-time using Solfège hand signs and octave controls</p>
+    </header>
+
+    <main class="app-content">
+      <!-- Camera & Canvas Section -->
+      <section class="viewport-section">
+        <div class="video-container">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="output_canvas"></canvas>
+          
+          <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+            <p id="loading-text">Initializing MediaPipe Hand Landmarker...</p>
+          </div>
+
+          <div class="mirror-indicator">
+            <span class="indicator-dot"></span> Camera Mirrored
+          </div>
+        </div>
+        
+        <div class="viewport-controls">
+          <button id="btn-power-camera" class="control-btn" title="Turn camera power on/off">
+            <span class="btn-icon">🔌</span> Stop Camera
+          </button>
+          <button id="btn-toggle-camera" class="control-btn" title="Toggle camera feed visibility">
+            <span class="btn-icon">👁️</span> Hide Camera Feed
+          </button>
+          <button id="btn-toggle-skeleton" class="control-btn" title="Toggle skeleton overlay visibility">
+            <span class="btn-icon">🕸️</span> Show Skeleton
+          </button>
+          <button id="btn-toggle-sound" class="control-btn" title="Toggle sound effects on/off">
+            <span class="btn-icon">🔊</span> Mute Sound
+          </button>
+        </div>
+      </section>
+
+      <!-- SignMusic Mode HUD -->
+      <section class="hud-section" id="music-hud">
+        <!-- Live Music Status Card -->
+        <div class="glass-card music-detection-card">
+          <h2 class="card-title">Live SignMusic Studio</h2>
+          <div class="detection-display">
+            <div class="letter-box" id="music-note-box">
+              <span id="music-note-val">-</span>
+            </div>
+            <div class="detection-details">
+              <div class="confidence-bar-container">
+                <span class="detail-label" id="left-hand-status" style="font-weight: 600; color: var(--text-primary);">Octave: C4 (No hand)</span>
+              </div>
+              <div class="confidence-bar-container">
+                <span class="detail-label" id="right-hand-status" style="font-weight: 600; color: var(--text-primary);">Sign: None</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Virtual Solfege Keyboard Card -->
+        <div class="glass-card keyboard-card">
+          <div class="card-header">
+            <h2 class="card-title">Solfège Keyboard</h2>
+          </div>
+          <p class="challenge-instruction">Show Solfège signs with your **right hand** to trigger notes. Control octave (C2 - C6) using extended finger counts (1 - 5) on your **left hand**!</p>
+          
+          <div class="virtual-keyboard" id="virtual-keyboard">
+            <!-- Populated dynamically -->
+          </div>
+          
+          <div class="octave-grid-container">
+            <div class="setting-title">Active Octave (Left Hand)</div>
+            <div class="octave-indicators" id="octave-indicators">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Synthesizer Controls Card -->
+        <div class="glass-card synth-controls-card">
+          <h2 class="card-title">Synthesizer Controls</h2>
+          <div class="synth-settings-grid">
+            <!-- Volume Slider -->
+            <div class="synth-setting-row">
+              <div class="setting-header">
+                <span class="setting-title">Master Volume</span>
+              </div>
+              <input type="range" id="synth-volume" min="0" max="0.8" step="0.05" value="0.3" class="synth-slider">
+            </div>
+
+            <!-- Waveform selector -->
+            <div class="synth-setting-row">
+              <span class="setting-title">Synth Waveform</span>
+              <div class="waveform-selector">
+                <button class="waveform-btn active" data-wave="triangle">Triangle</button>
+                <button class="waveform-btn" data-wave="sine">Sine</button>
+                <button class="waveform-btn" data-wave="sawtooth">Sawtooth</button>
+                <button class="waveform-btn" data-wave="square">Square</button>
+              </div>
+            </div>
+
+            <!-- Effects switches -->
+            <div class="effects-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+              <div class="toggle-switch-container">
+                <span class="toggle-label">Feedback Delay</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="synth-delay" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-switch-container">
+                <span class="toggle-label">Vibrato LFO</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="synth-vibrato" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-switch-container">
+                <span class="toggle-label">Left-Handed Mode</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="hand-roles-lefty">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calibration Card -->
+        <div class="glass-card calibration-card calibration-music-card">
+          <h2 class="card-title">Music Calibration Panel</h2>
+          <p class="challenge-instruction">Hold a Solfège sign with your **right hand**, select the target note below, and click "Calibrate Note" to save your custom shape.</p>
+          <div class="challenge-actions">
+            <div class="calibrate-select-wrapper">
+              <select id="calibrate-select" class="synth-select">
+                <option value="DO">Do (C)</option>
+                <option value="RE">Re (D)</option>
+                <option value="MI">Mi (E)</option>
+                <option value="FA">Fa (F)</option>
+                <option value="SOL">Sol (G)</option>
+                <option value="LA">La (A)</option>
+                <option value="TI">Ti (B)</option>
+              </select>
+              <button id="btn-music-calibrate" class="primary-btn">📸 Calibrate Note</button>
+            </div>
+          </div>
+          <div class="challenge-actions" style="margin-top: 0.75rem;">
+            <button id="btn-music-export" class="secondary-btn" title="Export Solfege templates as JSON">💾 Export JSON</button>
+            <button id="btn-music-reset" class="secondary-btn" title="Reset all custom Solfege templates">🔄 Reset Custom</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Powered by MediaPipe Tasks Vision &bull; Built for Inclusive Education</p>
+    </footer>
+  </div>
+
+  <!-- Music App entry script -->
+  <script type="module" src="music_app.js"></script>
+</body>
+</html>
