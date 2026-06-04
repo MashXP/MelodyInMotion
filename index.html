@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignQuest Sandbox - ASL Fingerspelling Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="icon">🤟</span>
+        <h1>SignQuest <span class="badge">Sandbox</span></h1>
+      </div>
+      <p class="tagline">Learn & play American Sign Language (ASL) fingerspelling in real-time</p>
+    </header>
+
+    <main class="app-content">
+      <!-- Camera & Canvas Section -->
+      <section class="viewport-section">
+        <div class="video-container">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="output_canvas"></canvas>
+          
+          <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+            <p id="loading-text">Initializing MediaPipe Hand Landmarker...</p>
+          </div>
+
+          <div class="mirror-indicator">
+            <span class="indicator-dot"></span> Camera Mirrored
+          </div>
+        </div>
+        
+        <div class="viewport-controls">
+          <button id="btn-power-camera" class="control-btn" title="Turn camera power on/off">
+            <span class="btn-icon">🔌</span> Stop Camera
+          </button>
+          <button id="btn-toggle-camera" class="control-btn" title="Toggle camera feed visibility">
+            <span class="btn-icon">👁️</span> Hide Camera Feed
+          </button>
+          <button id="btn-toggle-skeleton" class="control-btn" title="Toggle skeleton overlay visibility">
+            <span class="btn-icon">🕸️</span> Show Skeleton
+          </button>
+          <button id="btn-toggle-sound" class="control-btn" title="Toggle sound effects on/off">
+            <span class="btn-icon">🔊</span> Mute Sound
+          </button>
+        </div>
+      </section>
+
+      <!-- HUD Controls & Recognition Info Section -->
+      <section class="hud-section">
+        <!-- Live Recognition Card -->
+        <div class="glass-card detection-card">
+          <h2 class="card-title">Live Recognition</h2>
+          <div class="detection-display">
+            <div class="letter-box" id="detected-letter-box">
+              <span id="detected-letter">-</span>
+            </div>
+            <div class="detection-details">
+              <div class="confidence-bar-container">
+                <span class="detail-label">Hand Detected:</span>
+                <span id="hand-label" class="detail-value">None</span>
+              </div>
+              <div class="confidence-bar-container">
+                <span class="detail-label">Status:</span>
+                <span id="system-status" class="status-indicator status-offline">Offline</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Challenge Card -->
+        <div class="glass-card challenge-card">
+          <div class="card-header">
+            <h2 class="card-title">ASL Fingerspelling Game</h2>
+            <span class="score-display">Score: <strong id="score-val">0</strong>/24</span>
+          </div>
+          <p class="challenge-instruction">Select a target letter, then show the matching ASL sign to the camera to complete the challenge!</p>
+          
+          <div class="alphabet-grid" id="alphabet-grid">
+            <!-- Letters dynamically populated here -->
+          </div>
+
+          <div class="challenge-actions">
+            <button id="btn-next-target" class="primary-btn">
+              Next Random Letter
+            </button>
+            <button id="btn-reset-challenge" class="secondary-btn">
+              Reset Progress
+            </button>
+          </div>
+        </div>
+
+        <!-- Calibration Card -->
+        <div class="glass-card calibration-card">
+          <h2 class="card-title">Calibration Panel</h2>
+          <p class="challenge-instruction">Hold your hand in the target shape and click "Calibrate Shape" to overwrite the template guide with your own hand landmarks.</p>
+          <div class="challenge-actions">
+            <button id="btn-calibrate-current" class="primary-btn" title="Save current hand pose as the template for the target letter">
+              📸 Calibrate Shape
+            </button>
+            <button id="btn-download-json" class="secondary-btn" title="Download all your custom templates as a JSON file">
+              💾 Export JSON
+            </button>
+            <button id="btn-reset-calibration" class="secondary-btn" title="Reset all custom calibrations back to default templates">
+              🔄 Reset Custom
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Powered by MediaPipe Tasks Vision &bull; Built for Inclusive Education</p>
+    </footer>
+  </div>
+
+  <!-- App JavaScript logic -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+/* HUD Displays, Glass Cards, Challenge Grids, and Guides */
+.hud-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Live Recognition card details */
+.detection-display {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.letter-box {
+  width: 110px;
+  height: 110px;
+  background: radial-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(217, 70, 239, 0.05));
+  border: 2px dashed rgba(99, 102, 241, 0.3);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--accent-indigo);
+  text-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+  transition: var(--transition-smooth);
+}
+
+.letter-box.active-match {
+  background: radial-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.1));
+  border: 2px solid var(--accent-emerald);
+  color: var(--accent-emerald);
+  text-shadow: 0 0 20px rgba(10, 185, 129, 0.5);
+  animation: celebrate 0.5s ease-out;
+}
+
+.detection-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.confidence-bar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.detail-value {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-indicator::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-offline {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--accent-rose);
+}
+.status-offline::before {
+  background: var(--accent-rose);
+  box-shadow: 0 0 6px var(--accent-rose);
+}
+
+.status-loading {
+  background: rgba(253, 224, 71, 0.1);
+  color: #fde047;
+}
+.status-loading::before {
+  background: #fde047;
+  animation: blink 1s infinite;
+}
+
+.status-online {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-emerald);
+}
+.status-online::before {
+  background: var(--accent-emerald);
+  box-shadow: 0 0 6px var(--accent-emerald);
+}
+
+/* Challenge card details */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.score-display {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.score-display strong {
+  font-size: 1.15rem;
+  color: var(--accent-pink);
+}
+
+.challenge-instruction {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+  font-weight: 300;
+}
+
+.alphabet-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 columns fits 24 letters perfectly (6x4 grid) */
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.letter-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 0.65rem 0;
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.letter-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+}
+
+.letter-btn.target {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border-color: var(--accent-indigo);
+  color: #a5b4fc;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+  animation: pulsing-border 2s infinite ease-in-out;
+}
+
+.letter-btn.completed {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: var(--accent-emerald);
+  color: var(--accent-emerald);
+  cursor: default;
+}
+
+.challenge-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.primary-btn {
+  flex: 1.5;
+  background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
+  border: none;
+  color: white;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-glow);
+}
+
+.primary-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.primary-btn:active {
+  transform: translateY(0);
+}
+
+.secondary-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Guide scroll list */
+.guide-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.guide-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.guide-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 999px;
+}
+
+.guide-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+.guide-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.guide-item {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--text-muted);
+  transition: var(--transition-smooth);
+}
+
+.guide-item strong {
+  color: var(--text-primary);
+}
+
+.guide-item.highlighted {
+  background: rgba(99, 102, 241, 0.1);
+  border-left-color: var(--accent-indigo);
+  color: var(--text-primary);
+}
+
+.info-item {
+  border-left-style: dashed;
+  background: transparent;
+  font-size: 0.8rem;
+}
