@@ -5,6 +5,13 @@ All notable changes to the SignQuest Sandbox project are documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-06-06
+
+### Fixed
+- **Mi Note Missing Color Tag**: `MI` in `js/music.js` was referencing an undefined CSS variable `var(--accent-index)`, causing the Mi keyboard card in SignMusic Studio to render with no color indicator. Replaced with the correct amber hex `#f59e0b`, consistent with `js/rhythm/constants.js`.
+
+---
+
 ## [2.0.0] - 2026-06-05
 
 ### Added — SignMusic Rhythm Challenge (`music_game.html`)

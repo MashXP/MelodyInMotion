@@ -55,7 +55,7 @@ let audioInitialized = false;
 const NOTE_DETAILS = {
   DO: { label: "Do", key: "C", color: "var(--accent-rose)", emoji: "✊" },
   RE: { label: "Re", key: "D", color: "#fb923c", emoji: "🤚" }, // Orange
-  MI: { label: "Mi", key: "E", color: "var(--accent-index)", emoji: "✋" }, // Amber/Yellow (Wait, index color is amber in drawing.js)
+  MI: { label: "Mi", key: "E", color: "#f59e0b", emoji: "✋" }, // Amber/Yellow
   FA: { label: "Fa", key: "F", color: "var(--accent-emerald)", emoji: "👎" },
   SOL: { label: "Sol", key: "G", color: "var(--accent-cyan)", emoji: "👋" },
   LA: { label: "La", key: "A", color: "var(--accent-indigo)", emoji: "🖐️" },
