@@ -11,29 +11,18 @@ const canvasCtx = canvas.getContext("2d");
 const loadingOverlay = document.getElementById("loading-overlay");
 const loadingText = document.getElementById("loading-text");
 
-const btnPowerCamera = document.getElementById("btn-power-camera");
-const btnToggleCamera = document.getElementById("btn-toggle-camera");
-const btnToggleSkeleton = document.getElementById("btn-toggle-skeleton");
-const btnToggleSound = document.getElementById("btn-toggle-sound");
-
-// --- INITIAL STATE ---
+// Cache preferences
 let handLandmarker = null;
 let webcamRunning = false;
-let showCamera = localStorage.getItem("signquest_show_camera") !== "false"; // default true
-let showSkeleton = localStorage.getItem("signquest_show_skeleton") !== "false"; // default true
 let isCameraPowered = false;
-let soundMuted = localStorage.getItem("signquest_sound_muted") === "true"; // default false
-let userVolume = parseFloat(localStorage.getItem("signquest_user_volume") ?? "0.3"); // Default cached volume before mute
 
 // --- APP SETUP ---
 async function initializeApp() {
-  updateStatus("loading", "Loading Model...");
+  updateStatus("loading", "Loading MediaPipe & Templates...");
   
   try {
-    // 1. Initialize the base ASL templates (used for procedural rotation fallbacks)
+    // 1. Initialize templates and classifier reference shapes
     await initTemplates();
-    
-    // 2. Initialize the music calibrated templates (from music_calibrated_templates.json)
     await initMusicTemplates();
     
     // 2. Setup MediaPipe Landmarker
@@ -50,63 +39,41 @@ async function initializeApp() {
       numHands: 2
     });
     
-    // 3. Initialize the SignMusic studio page logic
-    initMusicPage({
-      musicNoteBox: document.getElementById("music-note-box"),
-      musicNoteVal: document.getElementById("music-note-val"),
-      leftHandStatus: document.getElementById("left-hand-status"),
-      rightHandStatus: document.getElementById("right-hand-status"),
-      octaveContainer: document.getElementById("octave-indicators"),
-      virtualKeyboard: document.getElementById("virtual-keyboard"),
-      calibrateSelect: document.getElementById("calibrate-select"),
-      btnCalibrate: document.getElementById("btn-music-calibrate"),
-      btnResetCalibration: document.getElementById("btn-music-reset"),
-      btnExportCalibration: document.getElementById("btn-music-export")
-    });
+    // 3. Initialize the SignMusic game coordinator
+    initMusicPage();
 
     // 4. Automatically power on camera
     powerOnCamera();
 
-    // 5. Apply loaded UI preferences
-    video.style.opacity = showCamera ? "1" : "0";
-    btnToggleCamera.innerHTML = showCamera 
-      ? `<span class="btn-icon">👁️</span> Hide Camera Feed` 
-      : `<span class="btn-icon">👁️</span> Show Camera Feed`;
-
-    btnToggleSkeleton.innerHTML = showSkeleton
-      ? `<span class="btn-icon">🕸️</span> Hide Skeleton`
-      : `<span class="btn-icon">🕸️</span> Show Skeleton`;
-
-    if (soundMuted) {
-      setVolume(0, false);
-      btnToggleSound.innerHTML = `<span class="btn-icon">🔇</span> Unmute Sound`;
-      const volSlider = document.getElementById("synth-volume");
-      if (volSlider) {
-        volSlider.value = 0;
-      }
-    } else {
-      setVolume(userVolume, true);
-      btnToggleSound.innerHTML = `<span class="btn-icon">🔊</span> Mute Sound`;
-    }
+    // 5. Setup safety controls if legacy buttons are present (for backwards compatibility)
+    setupLegacyControls();
+    
   } catch (error) {
     console.error("SignMusic Initialization failed:", error);
     updateStatus("offline", "Initialization Error");
-    loadingOverlay.style.display = "flex";
-    loadingOverlay.style.opacity = "1";
-    loadingText.innerText = "Error loading MediaPipe. Check your internet connection.";
+    if (loadingOverlay) {
+      loadingOverlay.style.display = "flex";
+      loadingOverlay.style.opacity = "1";
+    }
+    if (loadingText) {
+      loadingText.innerText = "Error loading MediaPipe. Check your internet connection.";
+    }
   }
 }
 
 function updateStatus(status, text) {
-  // Keeping compatible log messages
   console.log(`[System Status: ${status.toUpperCase()}] ${text}`);
 }
 
 // --- CAMERA POWER CONTROLS ---
 function powerOnCamera() {
-  loadingOverlay.style.display = "flex";
-  loadingOverlay.style.opacity = "1";
-  loadingText.innerText = "Accessing camera device...";
+  if (loadingOverlay) {
+    loadingOverlay.style.display = "flex";
+    loadingOverlay.style.opacity = "1";
+  }
+  if (loadingText) {
+    loadingText.innerText = "Accessing camera device...";
+  }
 
   const constraints = {
     video: {
@@ -118,57 +85,38 @@ function powerOnCamera() {
 
   navigator.mediaDevices.getUserMedia(constraints)
     .then((stream) => {
-      video.srcObject = stream;
-      video.addEventListener("loadeddata", startDetection);
-      
+      if (video) {
+        video.srcObject = stream;
+        video.addEventListener("loadeddata", startDetection);
+      }
       isCameraPowered = true;
-      btnPowerCamera.innerHTML = `<span class="btn-icon">🔌</span> Stop Camera`;
-      btnToggleCamera.disabled = false;
     })
     .catch((err) => {
       console.error("Camera access denied:", err);
-      loadingOverlay.style.display = "flex";
-      loadingOverlay.style.opacity = "1";
-      loadingText.innerText = "Camera access denied. Please grant webcam permissions and reload.";
-      btnToggleCamera.disabled = true;
+      if (loadingOverlay) {
+        loadingOverlay.style.display = "flex";
+        loadingOverlay.style.opacity = "1";
+      }
+      if (loadingText) {
+        loadingText.innerText = "Camera access denied. Please grant webcam permissions and reload.";
+      }
     });
-}
-
-function powerOffCamera() {
-  webcamRunning = false;
-  isCameraPowered = false;
-  deactivateMusicPage(); // Stop note synthesis immediately if camera goes off
-  
-  if (video.srcObject) {
-    const stream = video.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach(track => track.stop());
-    video.srcObject = null;
-  }
-
-  // Clear Canvas
-  canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Show UI Off State
-  loadingOverlay.style.display = "flex";
-  loadingOverlay.style.opacity = "1";
-  loadingText.innerText = "Camera is powered off.";
-  
-  // Update Buttons
-  btnPowerCamera.innerHTML = `<span class="btn-icon">🔌</span> Start Camera`;
-  btnToggleCamera.disabled = true;
 }
 
 function startDetection() {
   webcamRunning = true;
-  loadingOverlay.style.opacity = "0";
-  setTimeout(() => {
-    if (webcamRunning) loadingOverlay.style.display = "none";
-  }, 500);
+  if (loadingOverlay) {
+    loadingOverlay.style.opacity = "0";
+    setTimeout(() => {
+      if (webcamRunning && loadingOverlay) loadingOverlay.style.display = "none";
+    }, 500);
+  }
   
-  // Resize canvas to match video
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  if (video && canvas) {
+    // Resize canvas to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+  }
   
   // Start prediction loops
   requestAnimationFrame(predictLoop);
@@ -178,18 +126,23 @@ function startDetection() {
 let lastVideoTime = -1;
 
 function predictLoop() {
-  if (!webcamRunning) return;
+  if (!webcamRunning || !handLandmarker) return;
   
   const nowInMs = performance.now();
   
-  if (video.currentTime !== lastVideoTime) {
+  if (video && video.currentTime !== lastVideoTime) {
     lastVideoTime = video.currentTime;
     
     // Clear canvas
-    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    if (canvasCtx && canvas) {
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
     
     // Run MediaPipe Landmark inference
     const detections = handLandmarker.detectForVideo(video, nowInMs);
+    
+    // Fetch showSkeleton preference dynamically
+    const showSkeleton = localStorage.getItem("signquest_show_skeleton") !== "false";
     
     // Direct feed into our SignMusic prediction processor
     updateMusicPrediction(detections, canvasCtx, showSkeleton);
@@ -198,55 +151,29 @@ function predictLoop() {
   requestAnimationFrame(predictLoop);
 }
 
-// --- BUTTON LISTENERS ---
-btnPowerCamera.addEventListener("click", () => {
-  if (isCameraPowered) {
-    powerOffCamera();
-  } else {
-    powerOnCamera();
+function setupLegacyControls() {
+  // Safe bindings for legacy controls if they exist in html
+  const btnPowerCamera = document.getElementById("btn-power-camera");
+  if (btnPowerCamera) {
+    btnPowerCamera.addEventListener("click", () => {
+      if (isCameraPowered) {
+        webcamRunning = false;
+        isCameraPowered = false;
+        deactivateMusicPage();
+        if (video && video.srcObject) {
+          const stream = video.srcObject;
+          stream.getTracks().forEach(track => track.stop());
+          video.srcObject = null;
+        }
+        if (canvasCtx && canvas) canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+        btnPowerCamera.innerHTML = `Start Camera`;
+      } else {
+        powerOnCamera();
+        btnPowerCamera.innerHTML = `Stop Camera`;
+      }
+    });
   }
-});
-
-btnToggleCamera.addEventListener("click", () => {
-  showCamera = !showCamera;
-  localStorage.setItem("signquest_show_camera", showCamera.toString());
-  video.style.opacity = showCamera ? "1" : "0";
-  btnToggleCamera.innerHTML = showCamera 
-    ? `<span class="btn-icon">👁️</span> Hide Camera Feed` 
-    : `<span class="btn-icon">👁️</span> Show Camera Feed`;
-});
-
-btnToggleSkeleton.addEventListener("click", () => {
-  showSkeleton = !showSkeleton;
-  localStorage.setItem("signquest_show_skeleton", showSkeleton.toString());
-  btnToggleSkeleton.innerHTML = showSkeleton
-    ? `<span class="btn-icon">🕸️</span> Hide Skeleton`
-    : `<span class="btn-icon">🕸️</span> Show Skeleton`;
-});
-
-btnToggleSound.addEventListener("click", () => {
-  soundMuted = !soundMuted;
-  localStorage.setItem("signquest_sound_muted", soundMuted.toString());
-  if (soundMuted) {
-    // Cache current slider volume value before muting
-    const volSlider = document.getElementById("synth-volume");
-    if (volSlider) {
-      userVolume = parseFloat(volSlider.value);
-      localStorage.setItem("signquest_user_volume", userVolume.toString());
-      volSlider.value = 0;
-    }
-    setVolume(0, false); // Mute without overwriting persistent user volume
-    btnToggleSound.innerHTML = `<span class="btn-icon">🔇</span> Unmute Sound`;
-  } else {
-    // Restore cached volume
-    const volSlider = document.getElementById("synth-volume");
-    if (volSlider) {
-      volSlider.value = userVolume;
-    }
-    setVolume(userVolume, true); // Restore and save to persistent volume
-    btnToggleSound.innerHTML = `<span class="btn-icon">🔊</span> Mute Sound`;
-  }
-});
+}
 
 // Start on DOM load
 window.addEventListener("DOMContentLoaded", initializeApp);

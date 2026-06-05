@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SignQuest Sandbox - SignMusic Studio</title>
+  <title>Melody in Motion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Itim&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=19">
   <script>
     window.onerror = function(message, source, lineno, colno, error) {
       const errDiv = document.createElement('div');
@@ -30,172 +30,305 @@
     };
   </script>
 </head>
-<body>
+<body class="view-intro">
   <div class="app-container">
-    <header class="app-header">
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div class="logo-area">
-          <span class="icon">🎵</span>
-          <h1>SignQuest <span class="badge" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));">Music</span></h1>
-        </div>
-        <a href="index.html" style="text-decoration: none; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='var(--text-primary)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.color='var(--text-secondary)';">
-          🤟 Fingerspelling Sandbox
+    <!-- Smol Header -->
+    <header class="smol-header">
+      <div class="logo-area" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;" id="header-logo">
+        <img src="public/logo.PNG" alt="Melody in Motion Logo" class="header-logo-img">
+        <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0;">Smol</h1>
+      </div>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <select id="lang-selector-header" class="synth-select" style="padding: 0.4rem 0.8rem; font-size: 1.1rem; border-radius: 8px; border: 3px solid #1e293b; background: #ffffff; color: #1e293b; font-family: 'Itim', sans-serif;">
+          <option value="vi">🇻🇳 Tiếng Việt</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+        <a href="index.html" class="sandbox-nav-btn" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+          🤟 Sandbox
         </a>
       </div>
-      <p class="tagline">Play musical notes in real-time using Solfège hand signs and octave controls</p>
     </header>
 
-    <main class="app-content">
-      <!-- Camera & Canvas Section -->
-      <section class="viewport-section">
-        <div class="video-container">
-          <video id="webcam" autoplay playsinline muted></video>
-          <canvas id="output_canvas"></canvas>
-          
-          <div class="loading-overlay" id="loading-overlay">
-            <div class="spinner"></div>
-            <p id="loading-text">Initializing MediaPipe Hand Landmarker...</p>
-          </div>
+    <main class="app-content" id="music-app-content" style="position: relative; width: 100%; min-height: 550px;">
+      
+      <!-- GLOBAL CAMERA WRAPPER (Dynamically styled & placed by CSS based on active view) -->
+      <div id="global-camera-wrapper" class="video-container">
+        <video id="webcam" autoplay playsinline muted></video>
+        <canvas id="output_canvas"></canvas>
+        
+        <div class="loading-overlay" id="loading-overlay">
+          <div class="spinner"></div>
+          <p id="loading-text">Initializing Hand Landmarker...</p>
+        </div>
 
-          <div class="mirror-indicator">
-            <span class="indicator-dot"></span> Camera Mirrored
-          </div>
+        <div class="mirror-indicator">
+          <span class="indicator-dot"></span> Camera Mirrored
         </div>
         
-        <div class="viewport-controls">
-          <button id="btn-power-camera" class="control-btn" title="Turn camera power on/off">
-            <span class="btn-icon">🔌</span> Stop Camera
-          </button>
-          <button id="btn-toggle-camera" class="control-btn" title="Toggle camera feed visibility">
-            <span class="btn-icon">👁️</span> Hide Camera Feed
-          </button>
-          <button id="btn-toggle-skeleton" class="control-btn" title="Toggle skeleton overlay visibility">
-            <span class="btn-icon">🕸️</span> Show Skeleton
-          </button>
-          <button id="btn-toggle-sound" class="control-btn" title="Toggle sound effects on/off">
-            <span class="btn-icon">🔊</span> Mute Sound
+        <div class="lens-scan-overlay" id="lens-scan-overlay">
+          <div class="lens-scan-corner top-left"></div>
+          <div class="lens-scan-corner top-right"></div>
+          <div class="lens-scan-corner bottom-left"></div>
+          <div class="lens-scan-corner bottom-right"></div>
+        </div>
+      </div>
+
+      <!-- 1. INTRO & LANGUAGE SELECTION VIEW -->
+      <section id="intro-view" class="active-view-panel">
+        <div class="intro-glass-card">
+          <!-- Logo & Welcoming Subtext -->
+          <div class="intro-logo-banner">
+            <span class="music-icon-flying">🎵</span>
+            <h2>Melody in Motion</h2>
+            <p class="lang-translation-sub" data-key="intro-dedicated">Designed for the Deaf community and sign language users.</p>
+          </div>
+
+          <!-- Language Selector Grid -->
+          <div class="lang-grid-selector">
+            <h3 class="lang-prompt" data-key="choose-lang">Please choose your language:</h3>
+            <div class="lang-buttons">
+              <button class="lang-btn" data-lang="vi">🇻🇳 Tiếng Việt</button>
+              <button class="lang-btn" data-lang="en">🇺🇸 English</button>
+              <button class="lang-btn" data-lang="ko">🇰🇷 한국어</button>
+            </div>
+          </div>
+
+          <!-- Mascot Dialogue Box (Hidden initially, shown after language is picked) -->
+          <div id="mascot-dialogue-section" style="display: none; margin-top: 2rem;">
+            <div class="mascot-dialogue-bubble">
+              <!-- Animated mascot note icon -->
+              <div class="mascot-svg-wrapper" id="mascot-svg-container">
+                <!-- SVG injected dynamically -->
+              </div>
+              <div class="dialogue-text-content">
+                <p id="mascot-speech-text">...</p>
+              </div>
+            </div>
+            <div class="dialogue-actions-row">
+              <button id="btn-skip-intro" class="secondary-btn">Skip Intro</button>
+              <button id="btn-next-dialogue" class="primary-btn">Next &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. MAIN MENU / WELCOME VIEW -->
+      <section id="menu-view" class="active-view-panel" style="display: none;">
+        <div class="menu-main-layout">
+          <!-- Left side: Mascot & Interactive Stave Stave -->
+          <div class="menu-left-panel">
+            <div class="mascot-stage-card">
+              <div class="mascot-big-avatar" id="mascot-avatar-welcome"></div>
+              <div class="stave-visual-board">
+                <div class="stave-lines">
+                  <div class="stave-line"></div>
+                  <div class="stave-line"></div>
+                  <div class="stave-line"></div>
+                  <div class="stave-line"></div>
+                  <div class="stave-line"></div>
+                </div>
+                <!-- Cycle notes nodes -->
+                <div class="stave-note-node" id="cycling-note-node">Do</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Camera scanner & Game buttons -->
+          <div class="menu-right-panel">
+            <!-- Camera placeholder slot (Webcam wrapper aligns here in CSS) -->
+            <div class="menu-camera-card">
+              <div id="camera-slot-welcome"></div>
+              <div class="camera-status-bar" id="camera-status-txt">
+                <span class="status-dot pulsing"></span> Checking for Hand...
+              </div>
+            </div>
+
+            <!-- Buttons Grid -->
+            <div class="menu-actions-grid">
+              <button id="btn-menu-start" class="menu-play-btn disabled" disabled>
+                <span class="btn-main-icon">🎮</span>
+                <div class="btn-main-text">
+                  <strong data-key="btn-start">Start Game</strong>
+                  <span class="btn-subtext" id="btn-start-subtxt" data-key="btn-start-disabled">Show hand to unlock</span>
+                </div>
+              </button>
+              <div class="menu-sub-buttons">
+                <button id="btn-menu-levels" class="menu-sub-btn">
+                  <span class="sub-btn-icon">🎼</span>
+                  <span data-key="btn-levels">Select Level</span>
+                </button>
+                <button id="btn-menu-tutorial" class="menu-sub-btn">
+                  <span class="sub-btn-icon">💡</span>
+                  <span data-key="btn-tutorial">How to Play</span>
+                </button>
+                <button id="btn-menu-achievements" class="menu-sub-btn">
+                  <span class="sub-btn-icon">🏆</span>
+                  <span data-key="btn-achievements">Achievements</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. SONG SELECTION VIEW -->
+      <section id="selection-view" class="active-view-panel" style="display: none;">
+        <div class="song-selection-container">
+          <div class="selection-title-section">
+            <h2 class="selection-title" data-key="select-level-title">Choose a Melody</h2>
+            <p class="selection-subtitle" data-key="select-level-subtitle">Practice your Solfège signs by completing these levels.</p>
+          </div>
+          
+          <div class="songs-grid" id="songs-list-container">
+            <!-- Populated dynamically from songs.js -->
+          </div>
+
+          <button id="btn-selection-back" class="secondary-btn" style="margin-top: 1rem; padding: 0.8rem 2rem;">
+            &larr; <span data-key="btn-back">Back to Menu</span>
           </button>
         </div>
       </section>
 
-      <!-- SignMusic Mode HUD -->
-      <section class="hud-section" id="music-hud">
-        <!-- Live Music Status Card -->
-        <div class="glass-card music-detection-card">
-          <h2 class="card-title">Live SignMusic Studio</h2>
-          <div class="detection-display">
-            <div class="letter-box" id="music-note-box">
-              <span id="music-note-val">-</span>
-            </div>
-            <div class="detection-details">
-              <div class="confidence-bar-container">
-                <span class="detail-label" id="left-hand-status" style="font-weight: 600; color: var(--text-primary);">Octave: C4 (No hand)</span>
-              </div>
-              <div class="confidence-bar-container">
-                <span class="detail-label" id="right-hand-status" style="font-weight: 600; color: var(--text-primary);">Sign: None</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Virtual Solfege Keyboard Card -->
-        <div class="glass-card keyboard-card">
-          <div class="card-header">
-            <h2 class="card-title">Solfège Keyboard</h2>
-          </div>
-          <p class="challenge-instruction">Show Solfège signs with your **right hand** to trigger notes. Control octave (C2 - C6) using extended finger counts (1 - 5) on your **left hand**!</p>
+      <!-- 4. PLAY STAGE VIEW -->
+      <section id="play-view" class="active-view-panel" style="display: none;">
+        <div class="play-stage-container">
           
-          <div class="virtual-keyboard" id="virtual-keyboard">
-            <!-- Populated dynamically -->
-          </div>
-          
-          <div class="octave-grid-container">
-            <div class="setting-title">Active Octave (Left Hand)</div>
-            <div class="octave-indicators" id="octave-indicators">
-              <!-- Populated dynamically -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Synthesizer Controls Card -->
-        <div class="glass-card synth-controls-card">
-          <h2 class="card-title">Synthesizer Controls</h2>
-          <div class="synth-settings-grid">
-            <!-- Volume Slider -->
-            <div class="synth-setting-row">
-              <div class="setting-header">
-                <span class="setting-title">Master Volume</span>
+          <!-- TOP HALF: SHEET MUSIC TRACKER -->
+          <div class="sheet-music-panel">
+            <div class="play-header-row">
+              <div class="game-title-info">
+                <h2 id="play-song-title">Song Title</h2>
+                <span id="play-song-difficulty" class="song-badge">Easy</span>
               </div>
-              <input type="range" id="synth-volume" min="0" max="0.8" step="0.05" value="0.3" class="synth-slider">
-            </div>
-
-            <!-- Waveform selector -->
-            <div class="synth-setting-row">
-              <span class="setting-title">Synth Waveform</span>
-              <div class="waveform-selector">
-                <button class="waveform-btn active" data-wave="triangle">Triangle</button>
-                <button class="waveform-btn" data-wave="sine">Sine</button>
-                <button class="waveform-btn" data-wave="sawtooth">Sawtooth</button>
-                <button class="waveform-btn" data-wave="square">Square</button>
+              <div class="game-score-card">
+                <div class="score-display-box">
+                  <span data-key="label-score">Score</span>: <span id="play-score-val">0</span>
+                </div>
+                <button id="btn-play-quit" class="btn-quit-game" data-key="btn-quit">Quit Level</button>
               </div>
             </div>
 
-            <!-- Effects switches -->
-            <div class="effects-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
-              <div class="toggle-switch-container">
-                <span class="toggle-label">Feedback Delay</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="synth-delay" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-              <div class="toggle-switch-container">
-                <span class="toggle-label">Vibrato LFO</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="synth-vibrato" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-              <div class="toggle-switch-container">
-                <span class="toggle-label">Left-Handed Mode</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="hand-roles-lefty">
-                  <span class="toggle-slider"></span>
-                </label>
+            <!-- Horizontal Scroll Track -->
+            <div class="scroll-track-wrapper">
+              <div class="scroll-target-pointer"></div>
+              <div class="scroll-track-window" id="play-scroll-track">
+                <!-- Dynamically populated note blocks -->
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Calibration Card -->
-        <div class="glass-card calibration-card calibration-music-card">
-          <h2 class="card-title">Music Calibration Panel</h2>
-          <p class="challenge-instruction">Hold a Solfège sign with your **right hand**, select the target note below, and click "Calibrate Note" to save your custom shape.</p>
-          <div class="challenge-actions">
-            <div class="calibrate-select-wrapper">
-              <select id="calibrate-select" class="synth-select">
-                <option value="DO">Do (C)</option>
-                <option value="RE">Re (D)</option>
-                <option value="MI">Mi (E)</option>
-                <option value="FA">Fa (F)</option>
-                <option value="SOL">Sol (G)</option>
-                <option value="LA">La (A)</option>
-                <option value="TI">Ti (B)</option>
-              </select>
-              <button id="btn-music-calibrate" class="primary-btn">📸 Calibrate Note</button>
+            <!-- Progress Bar -->
+            <div class="play-progress-container">
+              <div class="play-progress-bar" id="play-progress-bar"></div>
             </div>
           </div>
-          <div class="challenge-actions" style="margin-top: 0.75rem;">
-            <button id="btn-music-export" class="secondary-btn" title="Export Solfege templates as JSON">💾 Export JSON</button>
-            <button id="btn-music-reset" class="secondary-btn" title="Reset all custom Solfege templates">🔄 Reset Custom</button>
+
+          <!-- BOTTOM HALF: CAMERA STAGE & LIVE ASSIST HUD -->
+          <div class="play-bottom-section">
+            <!-- Left: Camera (wrapper fits here in CSS) -->
+            <div class="camera-stage-container" id="camera-slot-play">
+              <!-- Hand tracking canvas frames fit here -->
+            </div>
+
+            <!-- Right: Guide & Controls HUD -->
+            <div class="live-action-hud">
+              <!-- Hand Pose Guide Card -->
+              <div class="guide-card-panel">
+                <div class="guide-illustration" id="guide-pose-emoji">✊</div>
+                <div class="guide-text-prompt" id="guide-pose-prompt">Show DO (C)</div>
+                <div class="guide-hand-description" id="guide-pose-desc">Make a closed fist (ASL 'S')</div>
+              </div>
+
+              <!-- Mini Controls Panel -->
+              <div class="stage-control-panel">
+                <div class="stage-btn-row">
+                  <button id="btn-play-sound" class="stage-btn active">
+                    <span>🔊</span> <span data-key="btn-mute">Mute</span>
+                  </button>
+                  <button id="btn-play-skeleton" class="stage-btn active">
+                    <span>🕸️</span> <span data-key="btn-skeleton">Skeleton</span>
+                  </button>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary);">
+                    <span data-key="label-volume">Volume</span>
+                    <span id="lbl-vol-val">30%</span>
+                  </div>
+                  <input type="range" id="play-volume" min="0" max="0.8" step="0.05" value="0.3" style="width: 100%; accent-color: var(--accent-indigo);">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; background: rgba(0,0,0,0.15); padding: 0.4rem 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03);">
+                  <span data-key="label-lefty">Left-Handed Mode</span>
+                  <label class="toggle-switch" style="transform: scale(0.85);">
+                    <input type="checkbox" id="play-hand-roles-lefty">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
     </main>
 
-    <footer class="app-footer">
-      <p>Powered by MediaPipe Tasks Vision &bull; Built for Inclusive Education</p>
-    </footer>
+
+  </div>
+
+  <!-- --- MODALS --- -->
+
+  <!-- 1. TUTORIAL / HƯỚNG DẪN MODAL -->
+  <div class="game-overlay-modal" id="modal-tutorial">
+    <div class="modal-content-card" style="max-width: 600px;">
+      <div class="modal-icon-badge">💡</div>
+      <h3 class="modal-title" data-key="tut-title">How to Play</h3>
+      <div class="modal-subtitle" style="text-align: left; max-height: 350px; overflow-y: auto; padding-right: 0.5rem; line-height: 1.6;">
+        <p style="margin-bottom: 0.75rem;"><strong style="color: var(--accent-cyan);" data-key="tut-step1-title">Step 1: Setup Octave</strong><br><span data-key="tut-step1-desc">Show 1 to 5 extended fingers with your non-playing hand (default left) to set the octave. If you show 0 fingers, the sound mutes.</span></p>
+        <p style="margin-bottom: 0.75rem;"><strong style="color: var(--accent-indigo);" data-key="tut-step2-title">Step 2: Sign the Note</strong><br><span data-key="tut-step2-desc">Use your playing hand (default right) to make the Solfège sign corresponding to the active note shown on the sheet music. Watch the yellow ghost guideline on camera if you're stuck!</span></p>
+        <p style="margin-bottom: 0.75rem;"><strong style="color: var(--accent-rose);" data-key="tut-step3-title">Step 3: Play and Score</strong><br><span data-key="tut-step3-desc">Match the correct note to play the sound and earn 1 point! To play consecutive identical notes, briefly release your hand gesture or change notes between play triggers.</span></p>
+      </div>
+      <button class="modal-btn primary modal-close-btn" style="width: 100%; margin-top: 1.5rem;" data-key="btn-close">Close</button>
+    </div>
+  </div>
+
+  <!-- 2. ACHIEVEMENTS / THÀNH TÍCH MODAL -->
+  <div class="game-overlay-modal" id="modal-achievements">
+    <div class="modal-content-card">
+      <div class="modal-icon-badge">🏆</div>
+      <h3 class="modal-title" data-key="ach-title">Your Achievements</h3>
+      <div class="modal-subtitle" style="text-align: left; margin-bottom: 2rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem;" id="achievements-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+      <button class="modal-btn primary modal-close-btn" style="width: 100%;" data-key="btn-close">Close</button>
+    </div>
+  </div>
+
+  <!-- 3. GAME COMPLETION MODAL -->
+  <div class="game-overlay-modal" id="modal-completion">
+    <div class="modal-content-card">
+      <div class="modal-icon-badge">🎉</div>
+      <h3 class="modal-title" id="compl-title">Level Cleared!</h3>
+      <p class="modal-subtitle" id="compl-subtitle">You have completed the song beautifully.</p>
+      
+      <div class="score-tally-row">
+        <div class="score-tally-item">
+          <span class="score-tally-val" id="compl-score">0</span>
+          <span class="score-tally-label" data-key="lbl-score-obtained">Notes Played</span>
+        </div>
+        <div class="score-tally-item">
+          <span class="score-tally-val" id="compl-stars">⭐⭐⭐</span>
+          <span class="score-tally-label" data-key="lbl-rating">Rating</span>
+        </div>
+      </div>
+
+      <div class="modal-action-row">
+        <button id="btn-compl-retry" class="modal-btn secondary" data-key="btn-replay">Replay</button>
+        <button id="btn-compl-menu" class="modal-btn primary" data-key="btn-menu">Main Menu</button>
+      </div>
+    </div>
   </div>
 
   <!-- Music App entry script -->

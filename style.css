@@ -4,4 +4,577 @@
 @import url('styles/viewport.css');
 @import url('styles/hud.css');
 @import url('styles/music.css');
+@import url('styles/selection.css');
+@import url('styles/play_stage.css');
+
+/* --- GLOBAL TYPOGRAPHY OVERRIDES --- */
+body[class^="view-"] h1,
+body[class^="view-"] h2,
+body[class^="view-"] h3,
+body[class^="view-"] strong,
+.selection-title,
+.modal-title,
+.sheet-note-name,
+.menu-play-btn strong,
+.logo-area h1,
+body, button, a, h1, h2, h3, h4, h5, h6, 
+.welcome-title, .welcome-subtitle, .song-title, .song-desc, 
+.sheet-note-name, .btn-subtext, strong, .selection-title, .selection-subtitle,
+.logo-area h1 span.badge {
+  font-family: 'Itim', 'Fredoka', 'Cabin Sketch', cursive, sans-serif !important;
+}
+
+body {
+  background-color: #fafaf9 !important; /* Warm, paper-like background */
+  background-image: 
+    /* Staff lines background repeating */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='150'><line x1='0' y1='40' x2='100' y2='40' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='48' x2='100' y2='48' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='56' x2='100' y2='56' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='64' x2='100' y2='64' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='72' x2='100' y2='72' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/></svg>") !important;
+  background-repeat: repeat !important;
+  background-position: left top !important;
+  color: #1e293b !important;
+}
+
+.app-container {
+  background: transparent !important;
+}
+
+body, button, a, p, span, div, select, option, td, th {
+  font-size: 1.15rem;
+}
+
+.song-title {
+  font-size: 1.75rem !important;
+}
+.song-desc {
+  font-size: 1.25rem !important;
+}
+.selection-title {
+  font-size: 3rem !important;
+}
+.selection-subtitle {
+  font-size: 1.4rem !important;
+}
+
+/* Curved Card Container & Card Overrides */
+.welcome-card-layout, 
+.song-card, 
+.welcome-modal-card,
+.sidebar-card, 
+.stage-card, 
+.menu-camera-card, 
+.mascot-stage-card,
+.game-overlay-modal .modal-card,
+.game-overlay-modal .welcome-modal-card,
+.modal-content {
+  border: 3.5px solid #000000 !important;
+  border-radius: 16px !important; /* Curved edge */
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 8px 8px 0px #000000 !important; /* Flat solid black shadow */
+}
+
+/* Curved Button Overrides */
+.welcome-action-btn, 
+.play-level-btn, 
+.sandbox-nav-btn,
+.control-btn, 
+.stage-btn, 
+.modal-close-btn,
+.welcome-modal-close {
+  border: 3px solid #000000 !important;
+  border-radius: 12px !important; /* Curved edge */
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 4px 4px 0px #000000 !important; /* Flat solid black shadow */
+  transition: all 0.15s ease !important;
+  padding: 1.1rem 2rem !important; /* Generous vertical/horizontal padding to prevent cramped feeling */
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  display: block !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Button Hover & Active States */
+.welcome-action-btn:hover,
+.play-level-btn:hover,
+.control-btn:hover,
+.stage-btn:hover,
+.modal-close-btn:hover,
+.sandbox-nav-btn:hover,
+.welcome-modal-close:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px #000000 !important;
+  background-color: #f8fafc !important;
+}
+
+.welcome-action-btn:active,
+.play-level-btn:active,
+.control-btn:active,
+.stage-btn:active,
+.modal-close-btn:active,
+.sandbox-nav-btn:active,
+.welcome-modal-close:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0px 0px 0px #000000 !important;
+}
+
+/* Specific Highlight & Accents */
+.welcome-action-btn.btn-start {
+  background-color: #fef08a !important; /* Highlighter yellow */
+}
+.welcome-action-btn.btn-start:hover {
+  background-color: #fef9c3 !important;
+}
+
+.song-badge {
+  border: 1.5px solid #000000 !important;
+  border-radius: 6px !important;
+  background-color: #f1f5f9 !important;
+  color: #1e293b !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+.achievement-item {
+  border: 2.5px solid #000000 !important;
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+}
+
+.app-header {
+  background: #ffffff !important;
+  border: 3.5px solid #000000 !important;
+  border-radius: 16px !important;
+  box-shadow: 8px 8px 0px #000000 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 1rem 2rem !important;
+  width: 90% !important;
+  margin: 2rem auto 1rem auto !important;
+}
+
+/* Page-context aware header card widths */
+body.view-welcome .app-header {
+  max-width: 480px !important;
+}
+
+body.view-selection .app-header {
+  max-width: 960px !important;
+}
+
+body.view-play .app-header, 
+body.view-intro .app-header {
+  max-width: 1200px !important;
+  width: 95% !important;
+}
+
+/* Header button sizing proportion */
+.app-header .sandbox-nav-btn {
+  padding: 0.6rem 1.2rem !important;
+  font-size: 1.15rem !important;
+}
+
+/* --- WELCOME PAGE ONLY LAYOUT STYLES --- */
+.welcome-card-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 3rem 2rem !important;
+  max-width: 480px !important;
+  width: 90% !important;
+  margin: 1.5rem auto 3rem auto !important; /* Adjusted to stack neatly below header */
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.welcome-logo {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-title {
+  font-size: 3.6rem !important;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.welcome-subtitle {
+  color: #475569;
+  font-size: 1.35rem !important;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+}
+
+.welcome-buttons-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
+  max-width: 320px !important;
+  margin: 1.5rem auto 0 auto !important;
+}
+
+.welcome-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.welcome-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.welcome-modal-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  border-bottom: 3px dashed #000000;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.welcome-modal-body {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.achievement-icon {
+  font-size: 1.5rem;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.achievement-desc {
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+/* --- LOGO & PAGE SCROLL OVERRIDES --- */
+.smol-header {
+  background: #ffffff !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 16px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0.6rem 1.2rem !important;
+  width: 100% !important;
+  max-width: 1400px !important;
+  margin: 0.25rem auto 0.75rem auto !important;
+}
+
+.smol-header .header-logo-img, .game-logo-icon {
+  height: 55px !important;
+  width: auto !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  object-fit: contain !important;
+  margin-right: 0.6rem !important;
+}
+
+.app-header {
+  display: none !important;
+}
+
+.app-footer {
+  display: none !important;
+}
+
+html, body {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.app-container {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 1rem 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  gap: 0.5rem !important;
+}
+
+#music-app-content, .app-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  min-height: 0 !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Specific layout adjustments to fit welcome view */
+.welcome-card-layout {
+  padding: 2.5rem !important;
+  margin: 0.5rem auto !important;
+  max-width: 600px !important;
+  width: 95% !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.welcome-gif {
+  max-width: 460px !important;
+  width: 100% !important;
+  height: auto !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 16px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  margin-bottom: 2rem !important;
+  display: block !important;
+  background-color: #ffffff !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-title {
+  font-size: 3rem !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-subtitle {
+  margin-bottom: 1.5rem !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-buttons-list {
+  gap: 0.85rem !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+/* Adjust header margins to prevent overflow */
+.app-header {
+  margin: 0.5rem auto !important;
+  padding: 0.75rem 1.5rem !important;
+}
+
+/* Custom scrollbar to look premium */
+#music-app-content::-webkit-scrollbar,
+.app-content::-webkit-scrollbar,
+.welcome-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+#music-app-content::-webkit-scrollbar-track,
+.app-content::-webkit-scrollbar-track,
+.welcome-modal-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+#music-app-content::-webkit-scrollbar-thumb,
+.app-content::-webkit-scrollbar-thumb,
+.welcome-modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid #f1f5f9;
+  border-radius: 4px;
+}
+#music-app-content::-webkit-scrollbar-thumb:hover,
+.app-content::-webkit-scrollbar-thumb:hover,
+.welcome-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Floating animated music notes */
+.floating-notes-container {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+  overflow: hidden !important;
+}
+
+.floating-note {
+  position: absolute !important;
+  font-family: 'Itim', sans-serif !important;
+  color: rgba(0, 0, 0, 0.45) !important; /* Semi-transparent black */
+  font-weight: bold;
+  pointer-events: none !important;
+  user-select: none !important;
+  opacity: 0;
+  animation: floatNote 20s linear infinite;
+}
+
+.note-1 {
+  font-size: 6.5rem !important; /* very large */
+  top: 8%;
+  animation-duration: 26s;
+  animation-delay: 0s;
+}
+
+.note-2 {
+  font-size: 3rem !important; /* medium-small */
+  top: 25%;
+  animation-duration: 18s;
+  animation-delay: -3s;
+}
+
+.note-3 {
+  font-size: 5rem !important; /* medium-large */
+  top: 48%;
+  animation-duration: 25s;
+  animation-delay: -6s;
+}
+
+.note-4 {
+  font-size: 2.2rem !important; /* very small */
+  top: 65%;
+  animation-duration: 15s;
+  animation-delay: -9s;
+}
+
+.note-5 {
+  font-size: 4rem !important;
+  top: 85%;
+  animation-duration: 20s;
+  animation-delay: -12s;
+}
+
+.note-6 {
+  font-size: 3.5rem !important;
+  top: 18%;
+  animation-duration: 22s;
+  animation-delay: -15s;
+}
+
+.note-7 {
+  font-size: 5.5rem !important;
+  top: 38%;
+  animation-duration: 28s;
+  animation-delay: -1.5s;
+}
+
+.note-8 {
+  font-size: 2rem !important; /* very small */
+  top: 58%;
+  animation-duration: 16s;
+  animation-delay: -4.5s;
+}
+
+.note-9 {
+  font-size: 6rem !important; /* very large */
+  top: 78%;
+  animation-duration: 24s;
+  animation-delay: -7.5s;
+}
+
+.note-10 {
+  font-size: 4.2rem !important;
+  top: 92%;
+  animation-duration: 19s;
+  animation-delay: -10.5s;
+}
+
+.note-11 {
+  font-size: 2.5rem !important;
+  top: 12%;
+  animation-duration: 17s;
+  animation-delay: -13s;
+}
+
+.note-12 {
+  font-size: 4.8rem !important;
+  top: 32%;
+  animation-duration: 23s;
+  animation-delay: -5s;
+}
+
+.note-13 {
+  font-size: 3.2rem !important;
+  top: 52%;
+  animation-duration: 19s;
+  animation-delay: -11s;
+}
+
+.note-14 {
+  font-size: 5.8rem !important;
+  top: 72%;
+  animation-duration: 27s;
+  animation-delay: -2s;
+}
+
+.note-15 {
+  font-size: 1.8rem !important; /* extremely small */
+  top: 88%;
+  animation-duration: 14s;
+  animation-delay: -8s;
+}
+
+.note-16 {
+  font-size: 4.5rem !important;
+  top: 40%;
+  animation-duration: 21s;
+  animation-delay: -16s;
+}
+
+@keyframes floatNote {
+  0% {
+    left: -10%;
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+}
+
+
 

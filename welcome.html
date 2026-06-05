@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melody in Motion - Welcome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Itim&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=25">
+</head>
+<body>
+
+  <!-- Floating Animated Music Notes Background -->
+  <div class="floating-notes-container">
+    <div class="floating-note note-1">𝄞</div>
+    <div class="floating-note note-2">♪</div>
+    <div class="floating-note note-3">♫</div>
+    <div class="floating-note note-4">♩</div>
+    <div class="floating-note note-5">♬</div>
+    <div class="floating-note note-6">♩</div>
+    <div class="floating-note note-7">♪</div>
+    <div class="floating-note note-8">♫</div>
+    <div class="floating-note note-9">𝄞</div>
+    <div class="floating-note note-10">♬</div>
+    <div class="floating-note note-11">♪</div>
+    <div class="floating-note note-12">♩</div>
+    <div class="floating-note note-13">♫</div>
+    <div class="floating-note note-14">♬</div>
+    <div class="floating-note note-15">𝄞</div>
+    <div class="floating-note note-16">♪</div>
+  </div>
+
+  <div class="app-container">
+    <!-- Smol Header -->
+    <header class="smol-header">
+      <div class="logo-area" style="display: flex; align-items: center; gap: 0.5rem;">
+        <img src="public/logo.PNG" alt="Melody in Motion Logo" class="header-logo-img">
+        <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0;">Smol</h1>
+      </div>
+      <div>
+        <select id="lang-selector-header" class="synth-select" style="padding: 0.4rem 0.8rem; font-size: 1.1rem; border-radius: 8px; border: 3px solid #1e293b; background: #ffffff; color: #1e293b; font-family: 'Itim', sans-serif;">
+          <option value="en">🇺🇸 English</option>
+          <option value="vi">🇻🇳 Tiếng Việt</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Main Card Container -->
+    <main id="music-app-content">
+      <div class="welcome-card-layout">
+        <h2 class="welcome-title">Melody in Motion</h2>
+        <p class="welcome-subtitle" style="text-align: center; font-size: 1.15rem; color: #475569; margin-top: -0.5rem; margin-bottom: 1.5rem; font-family: 'Itim', sans-serif;">Learn music through sign language with Melody!</p>
+        <img src="public/play piano GIF by Internet Cat Video Festival.gif" alt="Melody in Motion Intro" class="welcome-gif">
+        
+        <!-- Buttons List -->
+        <div class="welcome-buttons-list" style="width: 100%; display: flex; justify-content: center; align-items: center;">
+          <a href="music.html?start=true" class="welcome-action-btn btn-start" style="text-align: center; width: 100%; max-width: 280px; margin: 0 auto; display: block;">Start</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const TRANSLATIONS = {
+      en: {
+        subtitle: "Learn music through sign language with Melody!",
+        start: "Start"
+      },
+      vi: {
+        subtitle: "Học nhạc bằng Ngôn ngữ ký hiệu cùng Melody!",
+        start: "Bắt đầu"
+      },
+      ko: {
+        subtitle: "멜로디와 함께 수어로 음악을 배워보세요!",
+        start: "시작"
+      }
+    };
+
+    const langSelector = document.getElementById("lang-selector-header");
+    const subtitleEl = document.querySelector(".welcome-subtitle");
+    const startBtnEl = document.querySelector(".btn-start");
+
+    function updateLanguage(lang) {
+      localStorage.setItem("signquest_lang", lang);
+      langSelector.value = lang;
+      
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      subtitleEl.innerText = dict.subtitle;
+      startBtnEl.innerText = dict.start;
+    }
+
+    // Initialize language
+    let savedLang = localStorage.getItem("signquest_lang");
+    if (!savedLang) {
+      savedLang = "en"; // default to English for now
+    }
+    updateLanguage(savedLang);
+
+    langSelector.addEventListener("change", (e) => {
+      updateLanguage(e.target.value);
+    });
+  </script>
+</body>
+</html>

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SignQuest Sandbox - ASL Fingerspelling Detector</title>
+  <title>Melody in Motion Sandbox - ASL Fingerspelling Detector</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=19">
 </head>
 <body>
   <div class="app-container">
-    <header class="app-header">
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div class="logo-area">
-          <span class="icon">🤟</span>
-          <h1>SignQuest <span class="badge">Sandbox</span></h1>
-        </div>
-        <a href="music.html" style="text-decoration: none; background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet)); color: white; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; box-shadow: var(--shadow-glow); display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth);" onmouseover="this.style.filter='brightness(1.15)';" onmouseout="this.style.filter='brightness(1)';">
-          🎵 SignMusic Studio
-        </a>
+    <!-- Smol Header -->
+    <header class="smol-header">
+      <div class="logo-area" style="display: flex; align-items: center; gap: 0.5rem;">
+        <img src="public/logo.PNG" alt="Melody in Motion Logo" class="header-logo-img">
+        <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          Smol <span class="badge" style="font-size: 0.75rem; padding: 0.15rem 0.4rem;">Sandbox</span>
+        </h1>
       </div>
-      <p class="tagline">Learn & play American Sign Language (ASL) fingerspelling in real-time</p>
+      <a href="music.html" class="sandbox-nav-btn" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+        🎵 Melody Studio
+      </a>
     </header>
 
     <main class="app-content">
@@ -120,9 +120,7 @@
       </section>
     </main>
 
-    <footer class="app-footer">
-      <p>Powered by MediaPipe Tasks Vision &bull; Built for Inclusive Education</p>
-    </footer>
+
   </div>
 
   <!-- App JavaScript logic -->

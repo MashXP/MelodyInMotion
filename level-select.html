@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melody in Motion - Chọn màn chơi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Itim&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=19">
+</head>
+<body class="view-selection">
+
+  <div class="app-container">
+    <!-- Smol Header -->
+    <header class="smol-header">
+      <div class="logo-area" style="display: flex; align-items: center; gap: 0.5rem;">
+        <img src="public/logo.PNG" alt="Melody in Motion Logo" class="header-logo-img">
+        <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0;">Smol</h1>
+      </div>
+      <a href="welcome.html" class="sandbox-nav-btn" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+        <span>&larr;</span> Quay lại Menu
+      </a>
+    </header>
+
+    <!-- Main Selection Area -->
+    <main id="music-app-content">
+      <div class="song-selection-container">
+
+        <div class="selection-title-section">
+          <h2 class="selection-title">Chọn màn chơi</h2>
+          <p class="selection-subtitle">Luyện tập ký hiệu tay để hoàn thành bài hát cùng Melody.</p>
+        </div>
+
+        <div class="songs-grid">
+          <!-- Level 1: Tutorial -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="song-badge diff-beginner">Khởi đầu</span>
+              <span style="color: #10b981; font-weight: 700; font-size: 0.8rem;">🎓 Tutorial</span>
+            </div>
+            <div class="song-card-body">
+              <h3 class="song-title">Thang Âm Đô-Rê-Mi (Solfège Scale)</h3>
+              <p class="song-desc">Làm quen với 7 nốt nhạc cơ bản liên tục để học hình dạng các ký hiệu tay cơ bản.</p>
+            </div>
+            <div class="song-card-footer">
+              <div class="song-meta-info">
+                <span class="song-notes-count">🎵 7 nốt nhạc</span>
+                <span>⭐ Luyện tập cơ bản</span>
+              </div>
+              <a href="music.html?view=play&song=0" class="play-level-btn" style="text-decoration: none; color: inherit;">
+                <span>▶</span> Chơi
+              </a>
+            </div>
+          </div>
+
+          <!-- Level 2: Sample 1 -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="song-badge diff-easy">Dễ</span>
+              <span style="color: #0ea5e9; font-weight: 700; font-size: 0.8rem;">🐑 Sample 1</span>
+            </div>
+            <div class="song-card-body">
+              <h3 class="song-title">Mary Có Một Chú Cừu Nhỏ (Mary Had a Little Lamb)</h3>
+              <p class="song-desc">Bài hát đơn giản luyện chuyển đổi nhịp nhàng giữa các nốt Đô, Rê, Mi, Sol.</p>
+            </div>
+            <div class="song-card-footer">
+              <div class="song-meta-info">
+                <span class="song-notes-count">🎵 26 nốt nhạc</span>
+                <span>⭐ Chuyển nốt nhanh</span>
+              </div>
+              <a href="music.html?view=play&song=1" class="play-level-btn" style="text-decoration: none; color: inherit;">
+                <span>▶</span> Chơi
+              </a>
+            </div>
+          </div>
+
+          <!-- Level 3: Sample 2 -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="song-badge diff-medium">Trung bình</span>
+              <span style="color: #fb923c; font-weight: 700; font-size: 0.8rem;">⭐ Sample 2</span>
+            </div>
+            <div class="song-card-body">
+              <h3 class="song-title">Kìa Con Bướm Vàng / Ngôi Sao Nhỏ (Twinkle Twinkle)</h3>
+              <p class="song-desc">Bài hát dài hơn sử dụng hầu hết các nốt nhạc trong hệ Solfège ở nhịp điệu vừa phải.</p>
+            </div>
+            <div class="song-card-footer">
+              <div class="song-meta-info">
+                <span class="song-notes-count">🎵 42 nốt nhạc</span>
+                <span>⭐ Thử thách nhịp điệu</span>
+              </div>
+              <a href="music.html?view=play&song=2" class="play-level-btn" style="text-decoration: none; color: inherit;">
+                <span>▶</span> Chơi
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+  </div>
+
+</body>
+</html>
