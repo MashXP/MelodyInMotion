@@ -112,13 +112,62 @@ const TRANSLATIONS = {
 };
 
 const NOTE_DETAILS = {
-  DO: { label: "Do", key: "C", color: "var(--accent-rose)", emoji: "✊", desc: "Make a closed fist (ASL 'S')" },
-  RE: { label: "Re", key: "D", color: "#fb923c", emoji: "🤚", desc: "Angled flat hand (ASL 'B' tilted -35°)" },
-  MI: { label: "Mi", key: "E", color: "var(--accent-index)", emoji: "✋", desc: "Horizontal flat hand (ASL 'B' tilted -75°)" },
-  FA: { note: "FA", label: "Fa", key: "F", color: "var(--accent-emerald)", emoji: "👎", desc: "Thumbs down (ASL 'A' rotated 160°)" },
-  SOL: { label: "Sol", key: "G", color: "var(--accent-cyan)", emoji: "👋", desc: "Vertical flat hand (ASL 'B' rotated 0°)" },
-  LA: { label: "La", key: "A", color: "var(--accent-indigo)", emoji: "🖐️", desc: "Curved down hand (ASL 'C' rotated 150°)" },
-  TI: { label: "Ti", key: "B", color: "var(--accent-violet)", emoji: "☝️", desc: "Pointing up hand (ASL 'D' rotated -20°)" }
+  DO: {
+    label: "Do",
+    key: "C",
+    color: "var(--accent-rose)",
+    emoji: "✊",
+    spritePos: "0% 0%",
+    desc: "Make a closed fist (ASL 'S')"
+  },
+  RE: {
+    label: "Re",
+    key: "D",
+    color: "#fb923c",
+    emoji: "🤚",
+    spritePos: "33.33% 0%",
+    desc: "Angled flat hand (ASL 'B' tilted -35°)"
+  },
+  MI: {
+    label: "Mi",
+    key: "E",
+    color: "var(--accent-index)",
+    emoji: "✋",
+    spritePos: "66.67% 0%",
+    desc: "Horizontal flat hand (ASL 'B' tilted -75°)"
+  },
+  FA: {
+    label: "Fa",
+    key: "F",
+    color: "var(--accent-emerald)",
+    emoji: "👎",
+    spritePos: "100% 0%",
+    desc: "Thumbs down (ASL 'A' rotated 160°)"
+  },
+  SOL: {
+    label: "Sol",
+    key: "G",
+    color: "var(--accent-cyan)",
+    emoji: "👋",
+    spritePos: "0% 100%",
+    desc: "Vertical flat hand (ASL 'B' rotated 0°)"
+  },
+  LA: {
+    label: "La",
+    key: "A",
+    color: "var(--accent-indigo)",
+    emoji: "🖐️",
+    spritePos: "33.33% 100%",
+    desc: "Curved down hand (ASL 'C' rotated 150°)"
+  },
+  TI: {
+    label: "Ti",
+    key: "B",
+    color: "var(--accent-violet)",
+    emoji: "☝️",
+    spritePos: "66.67% 100%",
+    desc: "Pointing up hand (ASL 'D' rotated -20°)"
+  }
 };
 
 const NOTE_SEMITONES = { DO: 0, RE: 2, MI: 4, FA: 5, SOL: 7, LA: 9, TI: 11 };
@@ -197,11 +246,11 @@ let needsRelease = false; // prevents matching next note until user goes to neut
 let debouncedLeftFingers = 0;
 let pendingLeftFingers = -1;
 let consecutiveLeftFingersCount = 0;
-const LEFT_FINGERS_DEBOUNCE_THRESHOLD = 5;
+const LEFT_FINGERS_DEBOUNCE_THRESHOLD = 1;
 
 let pendingNote = "-";
 let consecutiveNoteCount = 0;
-const NOTE_DEBOUNCE_THRESHOLD = 3;
+const NOTE_DEBOUNCE_THRESHOLD = 1;
 
 let consecutiveLostFrames = 0;
 const LOSS_DEBOUNCE_THRESHOLD = 8;
@@ -209,13 +258,14 @@ const LOSS_DEBOUNCE_THRESHOLD = 8;
 let lastPlayedNote = "-";
 let lastPlayedOctave = -1;
 let lastSynthPlaying = false;
+let noteAutoReleaseTimer = null;
 
 // Audio context unlock
 let audioInitialized = false;
 
 // UI controls state cached
 let soundMuted = localStorage.getItem("signquest_sound_muted") === "true";
-let showSkeleton = localStorage.getItem("signquest_show_skeleton") !== "false";
+let showSkeleton = true; // Always show skeleton
 let userVolume = parseFloat(localStorage.getItem("signquest_user_volume") ?? "0.3");
 
 // Achievements database
@@ -267,7 +317,29 @@ export function initMusicPage() {
   const startParam = params.get("start");
   const songParam = params.get("song");
 
-  if (startParam === "true") {
+  const pathname = window.location.pathname;
+  let targetSongIndex = -1;
+  let autoPlay = false;
+
+  if (pathname.includes("tutorial.html")) {
+    targetSongIndex = 0;
+    autoPlay = true;
+  } else if (pathname.includes("sample1.html")) {
+    targetSongIndex = 1;
+    autoPlay = true;
+  } else if (pathname.includes("sample2.html")) {
+    targetSongIndex = 2;
+    autoPlay = true;
+  }
+
+  if (autoPlay) {
+    transitToView("play");
+    if (targetSongIndex >= 0 && targetSongIndex < SONGS.length) {
+      setTimeout(() => {
+        loadLevel(SONGS[targetSongIndex]);
+      }, 100);
+    }
+  } else if (startParam === "true") {
     transitToView("welcome");
   } else if (viewParam === "selection") {
     transitToView("selection");
@@ -366,7 +438,7 @@ function setupEventHandlers() {
   if (logo) {
     logo.addEventListener("click", () => {
       deactivateMusicPage();
-      window.location.href = "welcome.html";
+      window.location.href = "index.html";
     });
   }
 
@@ -445,11 +517,11 @@ function setupEventHandlers() {
   // Settings in play view
   const btnPlaySound = document.getElementById("btn-play-sound");
   if (btnPlaySound) {
+    btnPlaySound.innerText = soundMuted ? "🔇" : "🔊";
     btnPlaySound.addEventListener("click", () => {
       soundMuted = !soundMuted;
       localStorage.setItem("signquest_sound_muted", soundMuted.toString());
-      btnPlaySound.className = soundMuted ? "stage-btn" : "stage-btn active";
-      btnPlaySound.innerHTML = soundMuted ? "<span>🔇</span> Muted" : "<span>🔊</span> Sound On";
+      btnPlaySound.innerText = soundMuted ? "🔇" : "🔊";
       setVolume(soundMuted ? 0 : userVolume);
     });
   }
@@ -529,7 +601,7 @@ function setupModals() {
     btnMenuCompl.addEventListener("click", () => {
       document.getElementById("modal-completion").classList.remove("show");
       deactivateMusicPage();
-      window.location.href = "welcome.html";
+      window.location.href = "level-select.html";
     });
   }
 }
@@ -682,6 +754,8 @@ function loadLevel(song) {
   if (track) {
     track.innerHTML = "";
     
+    const NOTE_DIATONIC_STEPS = { DO: 0, RE: 1, MI: 2, FA: 3, SOL: 4, LA: 5, TI: 6 };
+    
     song.notes.forEach((step, idx) => {
       const detail = NOTE_DETAILS[step.note];
       const node = document.createElement("div");
@@ -689,10 +763,20 @@ function loadLevel(song) {
       node.id = `sheet-note-${idx}`;
       node.style.setProperty("--note-theme-color", detail.color);
       
+      // Calculate vertical stave position based on scale steps
+      const stepIndex = NOTE_DIATONIC_STEPS[step.note] ?? 0;
+      const totalStep = stepIndex + (step.octave - 4) * 7;
+      const verticalOffsetPx = (6 - totalStep) * 12;
+      node.style.setProperty("--note-offset-y", `${verticalOffsetPx}px`);
+      
+      // Calculate horizontal card width based on note duration
+      const duration = step.duration || 1;
+      const cardWidth = duration * 85;
+      node.style.width = `${cardWidth}px`;
+      node.style.flex = `0 0 ${cardWidth}px`;
+      
       node.innerHTML = `
-        <span class="sheet-note-emoji">${detail.emoji}</span>
         <span class="sheet-note-name">${detail.label}</span>
-        <span class="sheet-note-octave">C${step.octave}</span>
       `;
       
       track.appendChild(node);
@@ -723,7 +807,9 @@ function updateActiveGuide() {
   const guidePrompt = document.getElementById("guide-pose-prompt");
   const guideDesc = document.getElementById("guide-pose-desc");
 
-  if (guideEmoji) guideEmoji.innerText = detail.emoji;
+  if (guideEmoji) {
+    guideEmoji.innerHTML = `<img src="public/handsign/${detail.label}.png" alt="${detail.label} Handsign">`;
+  }
   if (guidePrompt) {
     const noteText = `${detail.label} (C${currentStep.octave})`;
     guidePrompt.innerText = currentLang === "vi" 
@@ -937,12 +1023,35 @@ export function updateMusicPrediction(detections, canvasCtx, forceSkeleton) {
       const noteChanged = (detectedNote !== lastPlayedNote);
       const octaveChanged = (activeOctave !== lastPlayedOctave);
       
-      if ((noteChanged || octaveChanged || !lastSynthPlaying) && !soundMuted) {
-        const freq = getFrequency(detectedNote, activeOctave);
-        playNote(freq, detectedNote, activeOctave);
+      // Only play the sound if the note is correct in gameplay mode
+      let isCorrect = true;
+      if (activeView === "play" && currentSong && currentNoteIndex < currentSong.notes.length) {
+        const targetStep = currentSong.notes[currentNoteIndex];
+        const isTutorial = (currentSong.id === "tutorial_scale");
+        const octaveMatches = isTutorial || (activeOctave === targetStep.octave);
+        const noteMatches = (detectedNote === targetStep.note);
+        isCorrect = noteMatches && octaveMatches;
+      }
+      
+      if (noteChanged || octaveChanged) {
+        if (isCorrect && !soundMuted) {
+          const freq = getFrequency(detectedNote, activeOctave);
+          playNote(freq, detectedNote, activeOctave);
+          lastSynthPlaying = true;
+          
+          // Auto-release the note after 500ms (0.5 seconds), or 1000ms (1.0 second) for the tutorial scale
+          const isTutorialScale = (currentSong && currentSong.id === "tutorial_scale");
+          const playDuration = isTutorialScale ? 1000 : 500;
+          if (noteAutoReleaseTimer) clearTimeout(noteAutoReleaseTimer);
+          noteAutoReleaseTimer = setTimeout(() => {
+            if (lastSynthPlaying) {
+              releaseNote();
+              lastSynthPlaying = false;
+            }
+          }, playDuration);
+        }
         lastPlayedNote = detectedNote;
         lastPlayedOctave = activeOctave;
-        lastSynthPlaying = true;
       }
       
       // Check for release criteria to clear consecutive identical note locks
@@ -957,11 +1066,11 @@ export function updateMusicPrediction(detections, canvasCtx, forceSkeleton) {
       needsRelease = false;
       if (lastSynthPlaying) {
         releaseNote();
-        lastPlayedNote = "-";
-        lastPlayedOctave = -1;
         lastSynthPlaying = false;
-        activeNote = "-";
       }
+      lastPlayedNote = "-";
+      lastPlayedOctave = -1;
+      activeNote = "-";
     }
 
     if (showSkeleton && canvasCtx) {
@@ -975,11 +1084,11 @@ export function updateMusicPrediction(detections, canvasCtx, forceSkeleton) {
     needsRelease = false;
     if (lastSynthPlaying) {
       releaseNote();
-      lastPlayedNote = "-";
-      lastPlayedOctave = -1;
       lastSynthPlaying = false;
-      activeNote = "-";
     }
+    lastPlayedNote = "-";
+    lastPlayedOctave = -1;
+    activeNote = "-";
   }
 }
 
@@ -1006,7 +1115,7 @@ function verifyNoteMatch(detectedNote, octave) {
     needsRelease = true; // Lock match until release
     
     // Play audio feedback chime
-    playSuccessChime();
+    playSuccessChime(targetStep.note, targetStep.octave);
 
     // Visual match card animation
     const matchedCard = document.getElementById(`sheet-note-${currentNoteIndex}`);
@@ -1040,20 +1149,26 @@ function verifyNoteMatch(detectedNote, octave) {
   }
 }
 
-function playSuccessChime() {
+function playSuccessChime(noteName, octave) {
   if (soundMuted) return;
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
+    
+    // Resolve frequency of the matched note
+    const freq = noteName ? getFrequency(noteName, octave) : 880.00;
+    
     osc.type = "sine";
-    osc.frequency.setValueAtTime(880.00, audioCtx.currentTime); // A5 chime
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.005, audioCtx.currentTime + 0.15);
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.005, audioCtx.currentTime + 0.35);
+    
     osc.connect(gain);
     gain.connect(audioCtx.destination);
+    
     osc.start();
-    osc.stop(audioCtx.currentTime + 0.15);
+    osc.stop(audioCtx.currentTime + 0.35);
   } catch (e) {}
 }
 
@@ -1088,6 +1203,12 @@ function triggerLevelClear() {
   // Show Modal
   const modal = document.getElementById("modal-completion");
   if (modal) modal.classList.add("show");
+
+  // Auto-redirect to level select after 3 seconds
+  setTimeout(() => {
+    if (modal) modal.classList.remove("show");
+    window.location.href = "level-select.html";
+  }, 3000);
 }
 
 function renderAchievementsList() {

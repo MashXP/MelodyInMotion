@@ -43,16 +43,98 @@ body, button, a, p, span, div, select, option, td, th {
 }
 
 .song-title {
-  font-size: 1.75rem !important;
+  font-size: 1.85rem !important;
+  margin-bottom: 0.75rem !important;
 }
 .song-desc {
-  font-size: 1.25rem !important;
+  font-size: 1.3rem !important;
+  line-height: 1.5 !important;
+  -webkit-line-clamp: 2 !important;
 }
 .selection-title {
-  font-size: 3rem !important;
+  font-size: 3.2rem !important;
 }
 .selection-subtitle {
-  font-size: 1.4rem !important;
+  font-size: 1.5rem !important;
+}
+.song-card {
+  min-height: 320px !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 1.75rem !important;
+}
+.song-badge {
+  font-size: 1rem !important;
+  padding: 0.4rem 0.8rem !important;
+}
+.song-card-header span:not(.song-badge) {
+  font-size: 1.1rem !important;
+}
+.song-meta-info {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+  font-size: 1.05rem !important;
+  color: var(--text-secondary);
+}
+.song-card-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.75rem !important;
+  margin-top: auto !important;
+  width: 100% !important;
+}
+.song-card .play-level-btn {
+  padding: 0.75rem 1.5rem !important;
+  font-size: 1.2rem !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+.songs-grid {
+  display: grid !important;
+  grid-template-columns: repeat(1, 1fr) !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+}
+@media (min-width: 768px) {
+  .songs-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Difficulty Card Background Color Overrides */
+.song-card.card-beginner {
+  background-color: #f2fcf5 !important; /* Soft pastel green */
+}
+.song-card.card-easy {
+  background-color: #f0f7ff !important; /* Soft pastel blue */
+}
+.song-card.card-medium {
+  background-color: #fffaf0 !important; /* Soft pastel orange/amber */
+}
+
+/* Badge Color & Contrast Overrides */
+.song-badge.diff-beginner {
+  background-color: #dcfce7 !important;
+  color: #15803d !important;
+  border: 2px solid #15803d !important;
+}
+.song-badge.diff-easy {
+  background-color: #e0f2fe !important;
+  color: #0369a1 !important;
+  border: 2px solid #0369a1 !important;
+}
+.song-badge.diff-medium {
+  background-color: #ffedd5 !important;
+  color: #c2410c !important;
+  border: 2px solid #c2410c !important;
 }
 
 /* Curved Card Container & Card Overrides */
@@ -300,14 +382,14 @@ body.view-intro .app-header {
   flex-direction: row !important;
   justify-content: space-between !important;
   align-items: center !important;
-  padding: 0.6rem 1.2rem !important;
+  padding: 0.4rem 1.2rem !important;
   width: 100% !important;
   max-width: 1400px !important;
-  margin: 0.25rem auto 0.75rem auto !important;
+  margin: 0.25rem auto 0.5rem auto !important;
 }
 
 .smol-header .header-logo-img, .game-logo-icon {
-  height: 55px !important;
+  height: 42px !important;
   width: auto !important;
   display: inline-block !important;
   vertical-align: middle !important;
@@ -344,9 +426,9 @@ html, body {
 
 #music-app-content, .app-content {
   flex: 1 !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
   min-height: 0 !important;
-  padding-bottom: 1rem !important;
+  padding-bottom: 0 !important;
 }
 
 /* Specific layout adjustments to fit welcome view */
@@ -574,6 +656,15 @@ html, body {
     transform: translateY(-80px);
     opacity: 0;
   }
+}
+
+/* Guide Illustration SVG styling */
+#guide-pose-emoji svg {
+  display: block;
+  margin: 0 auto;
+  width: 90px;
+  height: 90px;
+  max-width: 100%;
 }
 
 

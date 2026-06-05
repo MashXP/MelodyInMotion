@@ -1,8 +1,8 @@
 import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.8";
-import { initTemplates } from "./js/templates.js";
-import { initMusicPage, updateMusicPrediction, deactivateMusicPage } from "./js/music.js";
-import { initMusicTemplates } from "./js/music_templates.js";
-import { setVolume } from "./js/synth.js";
+import { initTemplates } from "./templates.js";
+import { initMusicPage, updateMusicPrediction, deactivateMusicPage } from "./music.js";
+import { initMusicTemplates } from "./music_templates.js";
+import { setVolume } from "./synth.js";
 
 // --- DOM ELEMENTS ---
 const video = document.getElementById("webcam");

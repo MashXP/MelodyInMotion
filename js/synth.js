@@ -86,54 +86,57 @@ function startNodes(freq) {
 
   const now = audioCtx.currentTime;
 
-  // Create primary oscillator
+  // Additive oscillators representing piano string harmonics
+  // 1. Fundamental
   osc1 = audioCtx.createOscillator();
-  osc1.type = waveform;
+  osc1.type = "sine";
   osc1.frequency.setValueAtTime(freq, now);
 
-  // Create secondary detuned oscillator for chorus/warmth
+  // 2. Second harmonic (octave)
   osc2 = audioCtx.createOscillator();
-  osc2.type = "sine";
-  osc2.frequency.setValueAtTime(freq * 1.005, now);
+  osc2.type = "triangle";
+  osc2.frequency.setValueAtTime(freq * 2, now);
 
-  // Create sub-oscillator for bass richness (one octave down)
+  // 3. Third harmonic (octave + fifth)
   subOsc = audioCtx.createOscillator();
-  subOsc.type = "triangle";
-  subOsc.frequency.setValueAtTime(freq * 0.5, now);
+  subOsc.type = "sine";
+  subOsc.frequency.setValueAtTime(freq * 3, now);
 
-  // Create LFO for vibrato
-  lfo = audioCtx.createOscillator();
-  lfo.frequency.setValueAtTime(6, now); // 6 Hz vibrato
-  
-  lfoGain = audioCtx.createGain();
-  lfoGain.gain.setValueAtTime(vibratoEnabled ? 2.5 : 0, now); // vibrato depth (Hz)
+  // Connect vibrato (if enabled)
+  if (vibratoEnabled) {
+    lfo = audioCtx.createOscillator();
+    lfo.frequency.setValueAtTime(5.5, now);
+    
+    lfoGain = audioCtx.createGain();
+    lfoGain.gain.setValueAtTime(1.5, now);
+    
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc1.frequency);
+    lfoGain.connect(osc2.frequency);
+    
+    lfo.start(now);
+  }
 
-  // Connect vibrato to oscillator pitch
-  lfo.connect(lfoGain);
-  lfoGain.connect(osc1.frequency);
-  lfoGain.connect(osc2.frequency);
+  // Combine harmonics with roll-off weights
+  const gain1 = audioCtx.createGain();
+  gain1.gain.setValueAtTime(0.70, now);
+  osc1.connect(gain1);
+  gain1.connect(filterNode);
 
-  // Connect synth voices to filter
-  const oscGain1 = audioCtx.createGain();
-  oscGain1.gain.setValueAtTime(0.4, now);
-  osc1.connect(oscGain1);
-  oscGain1.connect(filterNode);
+  const gain2 = audioCtx.createGain();
+  gain2.gain.setValueAtTime(0.22, now);
+  osc2.connect(gain2);
+  gain2.connect(filterNode);
 
-  const oscGain2 = audioCtx.createGain();
-  oscGain2.gain.setValueAtTime(0.3, now);
-  osc2.connect(oscGain2);
-  oscGain2.connect(filterNode);
-
-  const subGain = audioCtx.createGain();
-  subGain.gain.setValueAtTime(0.15, now);
-  subOsc.connect(subGain);
-  subGain.connect(filterNode);
+  const gain3 = audioCtx.createGain();
+  gain3.gain.setValueAtTime(0.08, now);
+  subOsc.connect(gain3);
+  gain3.connect(filterNode);
 
   // Start oscillators
   osc1.start(now);
   osc2.start(now);
   subOsc.start(now);
-  lfo.start(now);
 
   isPlaying = true;
 }
@@ -167,7 +170,7 @@ function stopNodesNow() {
  * Stops the oscillators with a delayed fade-out to prevent pops.
  */
 function stopNodesDelay() {
-  if (!osc1 && !osc2 && !subOsc && !lfo) return;
+  if (!osc1 && !osc2 && !subOsc) return;
 
   const voice = {
     osc1,
@@ -185,7 +188,7 @@ function stopNodesDelay() {
     
     // Remove this voice from releasing list
     releasingVoices = releasingVoices.filter(v => v !== voice);
-  }, 160);
+  }, 110);
 
   releasingVoices.push(voice);
 
@@ -196,7 +199,7 @@ function stopNodesDelay() {
 }
 
 /**
- * Triggers a note or smoothly slides to it if already playing.
+ * Triggers a piano note key strike.
  * @param {number} freq - Target frequency in Hz.
  * @param {string} noteName - Solfège note name.
  * @param {number} octave - Current octave.
@@ -214,49 +217,35 @@ export function playNote(freq, noteName, octave) {
 
   const now = audioCtx.currentTime;
 
-  if (!isPlaying) {
-    // Start playing note
-    startNodes(freq);
-    // Trigger envelope Attack
-    mainGain.gain.cancelScheduledValues(now);
-    mainGain.gain.setValueAtTime(mainGain.gain.value, now);
-    mainGain.gain.linearRampToValueAtTime(volume, now + 0.05);
-    
-    // Dynamic filter sweep on note trigger
-    filterNode.frequency.cancelScheduledValues(now);
-    filterNode.frequency.setValueAtTime(200, now);
-    filterNode.frequency.exponentialRampToValueAtTime(1200, now + 0.15);
-    filterNode.frequency.exponentialRampToValueAtTime(800, now + 0.4);
-  } else {
-    // Smooth pitch slide (Portamento)
-    osc1.frequency.cancelScheduledValues(now);
-    osc1.frequency.setValueAtTime(osc1.frequency.value, now);
-    osc1.frequency.exponentialRampToValueAtTime(freq, now + 0.08); // 80ms glide
+  // Always trigger a fresh key strike (no portamento glide for authentic piano feel)
+  startNodes(freq);
 
-    osc2.frequency.cancelScheduledValues(now);
-    osc2.frequency.setValueAtTime(osc2.frequency.value, now);
-    osc2.frequency.exponentialRampToValueAtTime(freq * 1.005, now + 0.08);
-
-    subOsc.frequency.cancelScheduledValues(now);
-    subOsc.frequency.setValueAtTime(subOsc.frequency.value, now);
-    subOsc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + 0.08);
-  }
+  // Piano strike volume envelope (5ms attack, natural decay over 2 seconds)
+  mainGain.gain.cancelScheduledValues(now);
+  mainGain.gain.setValueAtTime(0, now);
+  mainGain.gain.linearRampToValueAtTime(volume, now + 0.005);
+  mainGain.gain.exponentialRampToValueAtTime(0.005, now + 2.0);
+  
+  // Piano filter sweep (bright initial strike, decaying rapidly to warm tone)
+  filterNode.frequency.cancelScheduledValues(now);
+  filterNode.frequency.setValueAtTime(2500, now);
+  filterNode.frequency.exponentialRampToValueAtTime(320, now + 0.28);
 }
 
 /**
- * Triggers the volume Release phase to fade out the note.
+ * Triggers piano damper pedal release (quick dampening of string).
  */
 export function releaseNote() {
   if (!isPlaying || !audioCtx) return;
 
   const now = audioCtx.currentTime;
   
-  // Trigger envelope Release
+  // Fast dampening (100ms fade-out)
   mainGain.gain.cancelScheduledValues(now);
   mainGain.gain.setValueAtTime(mainGain.gain.value, now);
-  mainGain.gain.linearRampToValueAtTime(0, now + 0.15); // 150ms fade out
+  mainGain.gain.linearRampToValueAtTime(0, now + 0.1);
 
-  // Stop oscillators after fade out completes
+  // Stop oscillators
   stopNodesDelay();
 
   isPlaying = false;

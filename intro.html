@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Melody in Motion - Welcome</title>
+  <title>Melody in Motion - Introduction</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Itim&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -50,13 +50,19 @@
     <!-- Main Card Container -->
     <main id="music-app-content">
       <div class="welcome-card-layout">
-        <h2 class="welcome-title">Melody in Motion</h2>
-        <p class="welcome-subtitle" style="text-align: center; font-size: 1.15rem; color: #475569; margin-top: -0.5rem; margin-bottom: 1.5rem; font-family: 'Itim', sans-serif;">Learn music through sign language with Melody!</p>
-        <img src="public/play piano GIF by Internet Cat Video Festival.gif" alt="Melody in Motion Intro" class="welcome-gif">
+        <h2 class="welcome-title" id="intro-title">Introduction</h2>
         
-        <!-- Buttons List -->
-        <div class="welcome-buttons-list" style="width: 100%; display: flex; justify-content: center; align-items: center;">
-          <a href="music.html?start=true" class="welcome-action-btn btn-start" style="text-align: center; width: 100%; max-width: 280px; margin: 0 auto; display: block;">Start</a>
+        <!-- Premium sketch style placeholder message box -->
+        <div style="background: #ffffff; border: 3.5px solid #1e293b; border-radius: 16px; padding: 2rem; margin: 1.5rem 0; box-shadow: 6px 6px 0px #1e293b; text-align: left; width: 100%;">
+          <p id="intro-desc" style="font-size: 1.2rem; line-height: 1.6; color: #334155; font-family: 'Itim', sans-serif; margin: 0;">
+            Welcome to Smol! Here, you can learn basic music solfège notes (Do, Re, Mi...) using hand gestures. Make sure your webcam is ready and you have enough lighting.
+          </p>
+        </div>
+        
+        <!-- Action Row -->
+        <div class="welcome-buttons-list" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1rem;">
+          <a href="index.html" class="welcome-action-btn" style="text-align: center; width: 100%; max-width: 180px; text-decoration: none; background: #e2e8f0; color: #1e293b;">&larr; Back</a>
+          <a href="level-select.html" class="welcome-action-btn btn-next" style="text-align: center; width: 100%; max-width: 180px; text-decoration: none;">Next &rarr;</a>
         </div>
       </div>
     </main>
@@ -65,36 +71,46 @@
   <script>
     const TRANSLATIONS = {
       en: {
-        subtitle: "Learn music through sign language with Melody!",
-        start: "Start"
+        title: "Introduction",
+        desc: "Welcome to Smol! Here, you can learn basic music solfège notes (Do, Re, Mi...) using hand gestures. Make sure your webcam is ready and you have enough lighting.",
+        back: "Back",
+        next: "Next"
       },
       vi: {
-        subtitle: "Học nhạc bằng Ngôn ngữ ký hiệu cùng Melody!",
-        start: "Bắt đầu"
+        title: "Giới thiệu",
+        desc: "Chào mừng bạn đến với Smol! Tại đây, bạn có thể học các nốt nhạc solfège cơ bản (Đô, Rê, Mi...) bằng ký hiệu tay. Hãy đảm bảo webcam hoạt động tốt và có đủ ánh sáng.",
+        back: "Quay lại",
+        next: "Tiếp tục"
       },
       ko: {
-        subtitle: "멜로디와 함께 수어로 음악을 배워보세요!",
-        start: "시작"
+        title: "소개",
+        desc: "스몰(Smol)에 오신 것을 환영합니다! 이곳에서 손동작을 사용해 기본적인 음악 계이름(도, 레, 미...)을 배울 수 있습니다. 웹캠이 잘 작동하고 밝은 조명이 있는지 확인하세요.",
+        back: "이전",
+        next: "다음"
       }
     };
 
     const langSelector = document.getElementById("lang-selector-header");
-    const subtitleEl = document.querySelector(".welcome-subtitle");
-    const startBtnEl = document.querySelector(".btn-start");
+    const titleEl = document.getElementById("intro-title");
+    const descEl = document.getElementById("intro-desc");
+    const backBtnEl = document.querySelector(".welcome-action-btn:not(.btn-next)");
+    const nextBtnEl = document.querySelector(".btn-next");
 
     function updateLanguage(lang) {
       localStorage.setItem("signquest_lang", lang);
       langSelector.value = lang;
       
       const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
-      subtitleEl.innerText = dict.subtitle;
-      startBtnEl.innerText = dict.start;
+      titleEl.innerText = dict.title;
+      descEl.innerText = dict.desc;
+      backBtnEl.innerText = "← " + dict.back;
+      nextBtnEl.innerText = dict.next + " →";
     }
 
     // Initialize language
     let savedLang = localStorage.getItem("signquest_lang");
     if (!savedLang) {
-      savedLang = "en"; // default to English for now
+      savedLang = "en"; // default to English
     }
     updateLanguage(savedLang);
 

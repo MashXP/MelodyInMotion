@@ -3,127 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Melody in Motion Sandbox - ASL Fingerspelling Detector</title>
+  <title>Melody in Motion - Welcome</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=19">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Itim&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
+
+  <!-- Floating Animated Music Notes Background -->
+  <div class="floating-notes-container">
+    <div class="floating-note note-1">𝄞</div>
+    <div class="floating-note note-2">♪</div>
+    <div class="floating-note note-3">♫</div>
+    <div class="floating-note note-4">♩</div>
+    <div class="floating-note note-5">♬</div>
+    <div class="floating-note note-6">♩</div>
+    <div class="floating-note note-7">♪</div>
+    <div class="floating-note note-8">♫</div>
+    <div class="floating-note note-9">𝄞</div>
+    <div class="floating-note note-10">♬</div>
+    <div class="floating-note note-11">♪</div>
+    <div class="floating-note note-12">♩</div>
+    <div class="floating-note note-13">♫</div>
+    <div class="floating-note note-14">♬</div>
+    <div class="floating-note note-15">𝄞</div>
+    <div class="floating-note note-16">♪</div>
+  </div>
+
   <div class="app-container">
     <!-- Smol Header -->
     <header class="smol-header">
       <div class="logo-area" style="display: flex; align-items: center; gap: 0.5rem;">
         <img src="public/logo.PNG" alt="Melody in Motion Logo" class="header-logo-img">
-        <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-          Smol <span class="badge" style="font-size: 0.75rem; padding: 0.15rem 0.4rem;">Sandbox</span>
-        </h1>
+        <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0;">Smol</h1>
       </div>
-      <a href="music.html" class="sandbox-nav-btn" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.9rem;">
-        🎵 Melody Studio
-      </a>
+      <div>
+        <select id="lang-selector-header" class="synth-select" style="padding: 0.4rem 0.8rem; font-size: 1.1rem; border-radius: 8px; border: 3px solid #1e293b; background: #ffffff; color: #1e293b; font-family: 'Itim', sans-serif;">
+          <option value="en">🇺🇸 English</option>
+          <option value="vi">🇻🇳 Tiếng Việt</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+      </div>
     </header>
 
-    <main class="app-content">
-      <!-- Camera & Canvas Section -->
-      <section class="viewport-section">
-        <div class="video-container">
-          <video id="webcam" autoplay playsinline muted></video>
-          <canvas id="output_canvas"></canvas>
-          
-          <div class="loading-overlay" id="loading-overlay">
-            <div class="spinner"></div>
-            <p id="loading-text">Initializing MediaPipe Hand Landmarker...</p>
-          </div>
-
-          <div class="mirror-indicator">
-            <span class="indicator-dot"></span> Camera Mirrored
-          </div>
-        </div>
+    <!-- Main Card Container -->
+    <main id="music-app-content">
+      <div class="welcome-card-layout">
+        <h2 class="welcome-title">Melody in Motion</h2>
+        <p class="welcome-subtitle" style="text-align: center; font-size: 1.15rem; color: #475569; margin-top: -0.5rem; margin-bottom: 1.5rem; font-family: 'Itim', sans-serif;">Learn music through sign language with Melody!</p>
+        <img src="public/play piano GIF by Internet Cat Video Festival.gif" alt="Melody in Motion Intro" class="welcome-gif">
         
-        <div class="viewport-controls">
-          <button id="btn-power-camera" class="control-btn" title="Turn camera power on/off">
-            <span class="btn-icon">🔌</span> Stop Camera
-          </button>
-          <button id="btn-toggle-camera" class="control-btn" title="Toggle camera feed visibility">
-            <span class="btn-icon">👁️</span> Hide Camera Feed
-          </button>
-          <button id="btn-toggle-skeleton" class="control-btn" title="Toggle skeleton overlay visibility">
-            <span class="btn-icon">🕸️</span> Show Skeleton
-          </button>
-          <button id="btn-toggle-sound" class="control-btn" title="Toggle sound effects on/off">
-            <span class="btn-icon">🔊</span> Mute Sound
-          </button>
+        <!-- Buttons List -->
+        <div class="welcome-buttons-list" style="width: 100%; display: flex; justify-content: center; align-items: center;">
+          <a href="intro.html" class="welcome-action-btn btn-start" style="text-align: center; width: 100%; max-width: 280px; margin: 0 auto; display: block;">Start</a>
         </div>
-      </section>
-
-      <!-- HUD Controls & Recognition Info Section -->
-      <section class="hud-section">
-        <!-- Live Recognition Card -->
-        <div class="glass-card detection-card">
-          <h2 class="card-title">Live Recognition</h2>
-          <div class="detection-display">
-            <div class="letter-box" id="detected-letter-box">
-              <span id="detected-letter">-</span>
-            </div>
-            <div class="detection-details">
-              <div class="confidence-bar-container">
-                <span class="detail-label">Hand Detected:</span>
-                <span id="hand-label" class="detail-value">None</span>
-              </div>
-              <div class="confidence-bar-container">
-                <span class="detail-label">Status:</span>
-                <span id="system-status" class="status-indicator status-offline">Offline</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Target Challenge Card -->
-        <div class="glass-card challenge-card">
-          <div class="card-header">
-            <h2 class="card-title">ASL Fingerspelling Game</h2>
-            <span class="score-display">Score: <strong id="score-val">0</strong>/24</span>
-          </div>
-          <p class="challenge-instruction">Select a target letter, then show the matching ASL sign to the camera to complete the challenge!</p>
-          
-          <div class="alphabet-grid" id="alphabet-grid">
-            <!-- Letters dynamically populated here -->
-          </div>
-
-          <div class="challenge-actions">
-            <button id="btn-next-target" class="primary-btn">
-              Next Random Letter
-            </button>
-            <button id="btn-reset-challenge" class="secondary-btn">
-              Reset Progress
-            </button>
-          </div>
-        </div>
-
-        <!-- Calibration Card -->
-        <div class="glass-card calibration-card">
-          <h2 class="card-title">Calibration Panel</h2>
-          <p class="challenge-instruction">Hold your hand in the target shape and click "Calibrate Shape" to overwrite the template guide with your own hand landmarks.</p>
-          <div class="challenge-actions">
-            <button id="btn-calibrate-current" class="primary-btn" title="Save current hand pose as the template for the target letter">
-              📸 Calibrate Shape
-            </button>
-            <button id="btn-download-json" class="secondary-btn" title="Download all your custom templates as a JSON file">
-              💾 Export JSON
-            </button>
-            <button id="btn-reset-calibration" class="secondary-btn" title="Reset all custom calibrations back to default templates">
-              🔄 Reset Custom
-            </button>
-          </div>
-        </div>
-      </section>
+      </div>
     </main>
-
-
   </div>
 
-  <!-- App JavaScript logic -->
-  <script type="module" src="app.js"></script>
+  <script>
+    const TRANSLATIONS = {
+      en: {
+        subtitle: "Learn music through sign language with Melody!",
+        start: "Start"
+      },
+      vi: {
+        subtitle: "Học nhạc bằng Ngôn ngữ ký hiệu cùng Melody!",
+        start: "Bắt đầu"
+      },
+      ko: {
+        subtitle: "멜로디와 함께 수어로 음악을 배워보세요!",
+        start: "시작"
+      }
+    };
+
+    const langSelector = document.getElementById("lang-selector-header");
+    const subtitleEl = document.querySelector(".welcome-subtitle");
+    const startBtnEl = document.querySelector(".btn-start");
+
+    function updateLanguage(lang) {
+      localStorage.setItem("signquest_lang", lang);
+      langSelector.value = lang;
+      
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      subtitleEl.innerText = dict.subtitle;
+      startBtnEl.innerText = dict.start;
+    }
+
+    // Initialize language
+    let savedLang = localStorage.getItem("signquest_lang");
+    if (!savedLang) {
+      savedLang = "en"; // default to English for now
+    }
+    updateLanguage(savedLang);
+
+    langSelector.addEventListener("change", (e) => {
+      updateLanguage(e.target.value);
+    });
+  </script>
 </body>
 </html>

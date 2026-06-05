@@ -28,7 +28,7 @@ let fileMusicTemplates = {};
 // Load calibrated templates from the exported JSON file
 export async function initMusicTemplates() {
   try {
-    const response = await fetch("./music_calibrated_templates.json");
+    const response = await fetch("public/music_calibrated_templates.json");
     if (response.ok) {
       fileMusicTemplates = await response.json();
       console.log("Successfully loaded calibrated templates from music_calibrated_templates.json");

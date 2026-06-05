@@ -11,6 +11,26 @@
 </head>
 <body class="view-selection">
 
+  <!-- Floating Animated Music Notes Background -->
+  <div class="floating-notes-container">
+    <div class="floating-note note-1">𝄞</div>
+    <div class="floating-note note-2">♪</div>
+    <div class="floating-note note-3">♫</div>
+    <div class="floating-note note-4">♩</div>
+    <div class="floating-note note-5">♬</div>
+    <div class="floating-note note-6">♩</div>
+    <div class="floating-note note-7">♪</div>
+    <div class="floating-note note-8">♫</div>
+    <div class="floating-note note-9">𝄞</div>
+    <div class="floating-note note-10">♬</div>
+    <div class="floating-note note-11">♪</div>
+    <div class="floating-note note-12">♩</div>
+    <div class="floating-note note-13">♫</div>
+    <div class="floating-note note-14">♬</div>
+    <div class="floating-note note-15">𝄞</div>
+    <div class="floating-note note-16">♪</div>
+  </div>
+
   <div class="app-container">
     <!-- Smol Header -->
     <header class="smol-header">
@@ -18,9 +38,16 @@
         <img src="public/logo.PNG" alt="Melody in Motion Logo" class="header-logo-img">
         <h1 style="font-size: 1.5rem; font-weight: 800; font-family: 'Cabin Sketch', cursive; color: #1e293b; margin: 0;">Smol</h1>
       </div>
-      <a href="welcome.html" class="sandbox-nav-btn" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.9rem;">
-        <span>&larr;</span> Quay lại Menu
-      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <select id="lang-selector-header" class="synth-select" style="padding: 0.4rem 0.8rem; font-size: 1.1rem; border-radius: 8px; border: 3px solid #1e293b; background: #ffffff; color: #1e293b; font-family: 'Itim', sans-serif;">
+          <option value="en">🇺🇸 English</option>
+          <option value="vi">🇻🇳 Tiếng Việt</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+        <a href="index.html" class="sandbox-nav-btn btn-back-menu" style="text-decoration: none; padding: 0.4rem 0.8rem; font-size: 0.9rem; font-family: 'Itim', sans-serif;">
+          <span>&larr;</span> Quay lại Menu
+        </a>
+      </div>
     </header>
 
     <!-- Main Selection Area -->
@@ -28,79 +55,232 @@
       <div class="song-selection-container">
 
         <div class="selection-title-section">
-          <h2 class="selection-title">Chọn màn chơi</h2>
-          <p class="selection-subtitle">Luyện tập ký hiệu tay để hoàn thành bài hát cùng Melody.</p>
+          <h2 class="selection-title" id="select-title">Chọn màn chơi</h2>
+          <p class="selection-subtitle" id="select-subtitle">Luyện tập ký hiệu tay để hoàn thành bài hát cùng Melody.</p>
         </div>
 
         <div class="songs-grid">
           <!-- Level 1: Tutorial -->
-          <div class="song-card">
+          <div class="song-card card-beginner">
             <div class="song-card-header">
-              <span class="song-badge diff-beginner">Khởi đầu</span>
-              <span style="color: #10b981; font-weight: 700; font-size: 0.8rem;">🎓 Tutorial</span>
+              <span class="song-badge diff-beginner" id="l1-badge">Khởi đầu</span>
             </div>
             <div class="song-card-body">
-              <h3 class="song-title">Thang Âm Đô-Rê-Mi (Solfège Scale)</h3>
-              <p class="song-desc">Làm quen với 7 nốt nhạc cơ bản liên tục để học hình dạng các ký hiệu tay cơ bản.</p>
+              <h3 class="song-title" id="l1-title">Thang Âm Đô-Rê-Mi (Solfège Scale)</h3>
             </div>
             <div class="song-card-footer">
               <div class="song-meta-info">
-                <span class="song-notes-count">🎵 7 nốt nhạc</span>
-                <span>⭐ Luyện tập cơ bản</span>
+                <span class="song-notes-count" id="l1-meta-notes">🎵 7 nốt nhạc</span>
+                <span id="l1-meta-task">⭐ Luyện tập cơ bản</span>
               </div>
-              <a href="music.html?view=play&song=0" class="play-level-btn" style="text-decoration: none; color: inherit;">
-                <span>▶</span> Chơi
+              <a href="tutorial.html" class="play-level-btn btn-play-l1" style="text-decoration: none; color: inherit;">
+                <span>▶</span> <span class="play-btn-text">Chơi</span>
               </a>
             </div>
           </div>
 
           <!-- Level 2: Sample 1 -->
-          <div class="song-card">
+          <div class="song-card card-easy">
             <div class="song-card-header">
-              <span class="song-badge diff-easy">Dễ</span>
-              <span style="color: #0ea5e9; font-weight: 700; font-size: 0.8rem;">🐑 Sample 1</span>
+              <span class="song-badge diff-easy" id="l2-badge">Dễ</span>
             </div>
             <div class="song-card-body">
-              <h3 class="song-title">Mary Có Một Chú Cừu Nhỏ (Mary Had a Little Lamb)</h3>
-              <p class="song-desc">Bài hát đơn giản luyện chuyển đổi nhịp nhàng giữa các nốt Đô, Rê, Mi, Sol.</p>
+              <h3 class="song-title" id="l2-title">Mary Có Một Chú Cừu Nhỏ (Mary Had a Little Lamb)</h3>
             </div>
             <div class="song-card-footer">
               <div class="song-meta-info">
-                <span class="song-notes-count">🎵 26 nốt nhạc</span>
-                <span>⭐ Chuyển nốt nhanh</span>
+                <span class="song-notes-count" id="l2-meta-notes">🎵 26 nốt nhạc</span>
+                <span id="l2-meta-task">⭐ Chuyển nốt nhanh</span>
               </div>
-              <a href="music.html?view=play&song=1" class="play-level-btn" style="text-decoration: none; color: inherit;">
-                <span>▶</span> Chơi
+              <a href="sample1.html" class="play-level-btn btn-play-l2" style="text-decoration: none; color: inherit;">
+                <span>▶</span> <span class="play-btn-text">Chơi</span>
               </a>
             </div>
           </div>
 
           <!-- Level 3: Sample 2 -->
-          <div class="song-card">
+          <div class="song-card card-medium">
             <div class="song-card-header">
-              <span class="song-badge diff-medium">Trung bình</span>
-              <span style="color: #fb923c; font-weight: 700; font-size: 0.8rem;">⭐ Sample 2</span>
+              <span class="song-badge diff-medium" id="l3-badge">Trung bình</span>
             </div>
             <div class="song-card-body">
-              <h3 class="song-title">Kìa Con Bướm Vàng / Ngôi Sao Nhỏ (Twinkle Twinkle)</h3>
-              <p class="song-desc">Bài hát dài hơn sử dụng hầu hết các nốt nhạc trong hệ Solfège ở nhịp điệu vừa phải.</p>
+              <h3 class="song-title" id="l3-title">Kìa Con Bướm Vàng / Ngôi Sao Nhỏ (Twinkle Twinkle)</h3>
             </div>
             <div class="song-card-footer">
               <div class="song-meta-info">
-                <span class="song-notes-count">🎵 42 nốt nhạc</span>
-                <span>⭐ Thử thách nhịp điệu</span>
+                <span class="song-notes-count" id="l3-meta-notes">🎵 42 nốt nhạc</span>
+                <span id="l3-meta-task">⭐ Thử thách nhịp điệu</span>
               </div>
-              <a href="music.html?view=play&song=2" class="play-level-btn" style="text-decoration: none; color: inherit;">
-                <span>▶</span> Chơi
+              <a href="sample2.html" class="play-level-btn btn-play-l3" style="text-decoration: none; color: inherit;">
+                <span>▶</span> <span class="play-btn-text">Chơi</span>
               </a>
             </div>
           </div>
         </div>
       </div>
     </main>
-
-
   </div>
 
+  <script>
+    const TRANSLATIONS = {
+      en: {
+        back: "Back to Menu",
+        title: "Choose a Level",
+        subtitle: "Practice your hand signs to complete songs with Melody.",
+        l1: {
+          badge: "Beginner",
+          title: "Solfège Scale",
+          desc: "Learn the 7 basic Solfège notes in sequence to understand the core hand shapes.",
+          metaNotes: "🎵 7 Notes",
+          metaTask: "⭐ Basic Practice",
+          play: "Play"
+        },
+        l2: {
+          badge: "Easy",
+          title: "Mary Had a Little Lamb",
+          desc: "A simple classic song to practice transitions between Do, Re, Mi, Sol.",
+          metaNotes: "🎵 26 Notes",
+          metaTask: "⭐ Fast Transition",
+          play: "Play"
+        },
+        l3: {
+          badge: "Medium",
+          title: "Twinkle Twinkle Little Star",
+          desc: "A longer nursery rhyme using almost all Solfège notes at a moderate tempo.",
+          metaNotes: "🎵 42 Notes",
+          metaTask: "⭐ Rhythm Challenge",
+          play: "Play"
+        }
+      },
+      vi: {
+        back: "Quay lại Menu",
+        title: "Chọn màn chơi",
+        subtitle: "Luyện tập ký hiệu tay để hoàn thành bài hát cùng Melody.",
+        l1: {
+          badge: "Khởi đầu",
+          title: "Thang Âm Đô-Rê-Mi",
+          desc: "Làm quen với 7 nốt nhạc cơ bản liên tục để học hình dạng các ký hiệu tay cơ bản.",
+          metaNotes: "🎵 7 nốt nhạc",
+          metaTask: "⭐ Luyện tập cơ bản",
+          play: "Chơi"
+        },
+        l2: {
+          badge: "Dễ",
+          title: "Mary Có Một Chú Cừu Nhỏ",
+          desc: "Bài hát đơn giản luyện chuyển đổi nhịp nhàng giữa các nốt Đô, Rê, Mi, Sol.",
+          metaNotes: "🎵 26 nốt nhạc",
+          metaTask: "⭐ Chuyển nốt nhanh",
+          play: "Chơi"
+        },
+        l3: {
+          badge: "Trung bình",
+          title: "Kìa Con Bướm Vàng / Ngôi Sao Nhỏ",
+          desc: "Bài hát dài hơn sử dụng hầu hết các nốt nhạc trong hệ Solfège ở nhịp điệu vừa phải.",
+          metaNotes: "🎵 42 nốt nhạc",
+          metaTask: "⭐ Thử thách nhịp điệu",
+          play: "Chơi"
+        }
+      },
+      ko: {
+        back: "메뉴로 돌아가기",
+        title: "레벨 선택",
+        subtitle: "멜로디와 함께 노래를 완성하기 위해 손기호를 연습해 보세요.",
+        l1: {
+          badge: "입문",
+          title: "도레미 계음",
+          desc: "기본 손모양을 이해하기 위해 7개의 기본 도레미 음표를 순서대로 배웁니다.",
+          metaNotes: "🎵 7개 음표",
+          metaTask: "⭐ 기본 연습",
+          play: "재생"
+        },
+        l2: {
+          badge: "쉬움",
+          title: "비행기 (Mary Had a Little Lamb)",
+          desc: "도, 레, 미, 솔 사이의 전환을 연습하는 간단하고 친숙한 동요.",
+          metaNotes: "🎵 26개 음표",
+          metaTask: "⭐ 빠른 전환",
+          play: "재생"
+        },
+        l3: {
+          badge: "보통",
+          title: "반짝반짝 작은 별",
+          desc: "적당한 템포로 거의 모든 도레미 음표를 사용하는 더 긴 동요.",
+          metaNotes: "🎵 42개 음표",
+          metaTask: "⭐ 리듬 도전",
+          play: "재생"
+        }
+      }
+    };
+
+    const langSelector = document.getElementById("lang-selector-header");
+    const backBtnEl = document.querySelector(".btn-back-menu");
+    const selectTitleEl = document.getElementById("select-title");
+    const selectSubtitleEl = document.getElementById("select-subtitle");
+    
+    // Level 1 Elements
+    const l1Badge = document.getElementById("l1-badge");
+    const l1Title = document.getElementById("l1-title");
+    const l1MetaNotes = document.getElementById("l1-meta-notes");
+    const l1MetaTask = document.getElementById("l1-meta-task");
+    const l1PlayBtn = document.querySelector(".btn-play-l1 .play-btn-text");
+
+    // Level 2 Elements
+    const l2Badge = document.getElementById("l2-badge");
+    const l2Title = document.getElementById("l2-title");
+    const l2MetaNotes = document.getElementById("l2-meta-notes");
+    const l2MetaTask = document.getElementById("l2-meta-task");
+    const l2PlayBtn = document.querySelector(".btn-play-l2 .play-btn-text");
+
+    // Level 3 Elements
+    const l3Badge = document.getElementById("l3-badge");
+    const l3Title = document.getElementById("l3-title");
+    const l3MetaNotes = document.getElementById("l3-meta-notes");
+    const l3MetaTask = document.getElementById("l3-meta-task");
+    const l3PlayBtn = document.querySelector(".btn-play-l3 .play-btn-text");
+
+    function updateLanguage(lang) {
+      localStorage.setItem("signquest_lang", lang);
+      langSelector.value = lang;
+      
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      
+      // Update global labels
+      backBtnEl.innerHTML = `<span>&larr;</span> ${dict.back}`;
+      selectTitleEl.innerText = dict.title;
+      selectSubtitleEl.innerText = dict.subtitle;
+
+      // Update Level 1 Card
+      l1Badge.innerText = dict.l1.badge;
+      l1Title.innerText = dict.l1.title;
+      l1MetaNotes.innerText = dict.l1.metaNotes;
+      l1MetaTask.innerText = dict.l1.metaTask;
+      l1PlayBtn.innerText = dict.l1.play;
+
+      // Update Level 2 Card
+      l2Badge.innerText = dict.l2.badge;
+      l2Title.innerText = dict.l2.title;
+      l2MetaNotes.innerText = dict.l2.metaNotes;
+      l2MetaTask.innerText = dict.l2.metaTask;
+      l2PlayBtn.innerText = dict.l2.play;
+
+      // Update Level 3 Card
+      l3Badge.innerText = dict.l3.badge;
+      l3Title.innerText = dict.l3.title;
+      l3MetaNotes.innerText = dict.l3.metaNotes;
+      l3MetaTask.innerText = dict.l3.metaTask;
+      l3PlayBtn.innerText = dict.l3.play;
+    }
+
+    // Initialize language
+    let savedLang = localStorage.getItem("signquest_lang");
+    if (!savedLang) {
+      savedLang = "en";
+    }
+    updateLanguage(savedLang);
+
+    langSelector.addEventListener("change", (e) => {
+      updateLanguage(e.target.value);
+    });
+  </script>
 </body>
 </html>
