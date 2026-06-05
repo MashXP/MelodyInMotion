@@ -480,12 +480,12 @@ export function updateMusicPrediction(detections, canvasCtx, showSkeleton) {
         if (elBtnCalibrate) {
           elBtnCalibrate.innerHTML = `<span>📸 Capturing (Slot ${calibrationCaptureIndex + 1}/10)</span>`;
         }
-        // Schedule next capture in 1 second
+        // Schedule next capture in 0.5 seconds
         calibrationNextTimeout = setTimeout(() => {
           if (isCalibratingAutomated) {
             captureFlag = true;
           }
-        }, 1000);
+        }, 500);
       } else {
         // Calibration complete!
         isCalibratingAutomated = false;
@@ -657,7 +657,7 @@ function triggerCalibrationFlash(slotCount) {
     setTimeout(() => {
       panel.style.borderColor = "";
       panel.style.boxShadow = "";
-    }, 400); // 400ms flash is clean for consecutive 1s captures
+    }, 200); // 200ms flash is clean for consecutive 0.5s captures
   }
 
   // Play calibration acoustic beep

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignQuest - SignMusic Rhythm Challenge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      const errDiv = document.createElement('div');
+      errDiv.style.position = 'fixed';
+      errDiv.style.top = '10px';
+      errDiv.style.left = '10px';
+      errDiv.style.right = '10px';
+      errDiv.style.background = 'rgba(220, 38, 38, 0.95)';
+      errDiv.style.color = 'white';
+      errDiv.style.padding = '15px';
+      errDiv.style.borderRadius = '10px';
+      errDiv.style.zIndex = '99999';
+      errDiv.style.fontFamily = 'monospace';
+      errDiv.style.fontSize = '14px';
+      errDiv.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
+      errDiv.style.border = '2px solid #ef4444';
+      errDiv.innerHTML = '<strong>JS Error:</strong> ' + message + '<br><small>at ' + source + ':' + lineno + ':' + colno + '</small>';
+      document.body.appendChild(errDiv);
+      return false;
+    };
+  </script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="logo-area">
+          <span class="icon">🎮</span>
+          <h1>SignQuest <span class="badge" style="background: linear-gradient(135deg, var(--accent-pink), var(--accent-indigo));">Rhythm Challenge</span></h1>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button id="btn-toggle-levels" class="control-btn" style="padding: 0.6rem 1.2rem; font-weight: 600;">
+            🎵 Level List
+          </button>
+          <button id="btn-toggle-settings" class="control-btn" style="padding: 0.6rem 1.2rem; font-weight: 600;">
+            ⚙️ Settings
+          </button>
+          <a href="song_maker.html" style="text-decoration: none; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='var(--text-primary)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.color='var(--text-secondary)';">
+            🛠️ Song Maker
+          </a>
+          <a href="music.html" style="text-decoration: none; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='var(--text-primary)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.color='var(--text-secondary)';">
+            🎵 Studio
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-content" style="justify-content: center; align-items: center; display: flex; width: 100%;">
+      <div class="game-center-container" style="position: relative; width: 100%; max-width: 1200px;">
+        <!-- CENTRAL FOCUS: Large Video Container with Overlays -->
+        <div class="video-container" style="aspect-ratio: 16 / 9; box-shadow: 0 25px 50px rgba(0,0,0,0.6); position: relative; border-radius: 24px; overflow: hidden; width: 100%;">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="output_canvas"></canvas>
+          
+          <!-- RETRACTABLE DOCK: Bottom Center (Game Controls) -->
+          <div class="hud-floating game-controls-bar minimized" id="game-controls-bar">
+            <!-- Pull-up Toggle Tab -->
+            <button id="btn-toggle-controls">
+              <span id="toggle-controls-icon">▲</span> <span id="toggle-controls-text">Show Controls</span>
+            </button>
+            <!-- Controls Row -->
+            <div id="game-controls-row">
+              <button class="control-btn" id="btn-game-play">
+                <span>▶️ Start Level</span>
+              </button>
+              <button class="control-btn" id="btn-game-stop" disabled>
+                <span>Stop ⏹️</span>
+              </button>
+              <button class="control-btn" id="btn-fullscreen">
+                🖥️ Fullscreen
+              </button>
+            </div>
+          </div>
+          
+          <!-- Large Centered Countdown overlay -->
+          <div class="countdown-overlay" id="game-countdown" style="display: none; position: absolute; inset: 0; background: rgba(9, 13, 22, 0.65); backdrop-filter: blur(4px); z-index: 10; align-items: center; justify-content: center; pointer-events: none;">
+            <div id="countdown-number" style="font-size: 6rem; font-weight: 900; color: var(--accent-cyan); text-shadow: 0 0 30px rgba(6, 182, 212, 0.6); font-family: 'Outfit', sans-serif;">3</div>
+          </div>
+          
+          <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+            <p id="loading-text">Initializing MediaPipe Hand Landmarker...</p>
+          </div>
+
+          <!-- FLOATING HUD: Top Left (Level Info) -->
+          <div class="hud-floating hud-top-left">
+            <div id="hud-level-title" style="font-weight: 800; font-size: 1.4rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Select a Level</div>
+            <div id="hud-bpm-label" style="font-size: 0.95rem; color: var(--text-secondary); text-shadow: 0 1px 2px rgba(0,0,0,0.5);">0 BPM</div>
+            <div class="hud-level-progress-bg" style="width: 180px; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; margin-top: 0.35rem; overflow: hidden; display: none;" id="hud-progress-bg">
+              <div id="hud-progress-fill" style="width: 0%; height: 100%; background: var(--accent-cyan);"></div>
+            </div>
+          </div>
+
+          <!-- FLOATING HUD: Top Right (Score / Rank / Combo) -->
+          <div class="hud-floating hud-top-right" style="display: flex; gap: 1rem; align-items: center;">
+            <div class="hud-block">
+              <span class="hud-lbl">Score</span>
+              <span class="hud-val" id="game-score">00000</span>
+            </div>
+            <div class="hud-block">
+              <span class="hud-lbl">Combo</span>
+              <span class="hud-val glow-pink" id="game-combo">0</span>
+            </div>
+            <div class="hud-block">
+              <span class="hud-lbl">Accuracy</span>
+              <span class="hud-val glow-cyan" id="game-accuracy">100.0%</span>
+            </div>
+            <div class="hud-block">
+              <span class="hud-lbl">Rank</span>
+              <span class="hud-val rank-badge-glow" id="game-rank" style="color: var(--accent-rose);">S</span>
+            </div>
+          </div>
+
+          <!-- FLOATING HUD: Bottom Left (Octave Hand Recognition Info) -->
+          <div class="hud-floating hud-bottom-left" style="background: rgba(10, 15, 30, 0.65); border: 1px solid rgba(255,255,255,0.06); padding: 0.65rem 1.0rem; border-radius: 12px; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; pointer-events: none;">
+            <span style="color: var(--accent-cyan); font-weight: bold;">👈 Octave:</span>
+            <span id="live-octave-val" style="color: white; font-weight: 600;">C4 (No hand)</span>
+          </div>
+
+          <!-- FLOATING HUD: Bottom Right (Sign Hand Recognition Info) -->
+          <div class="hud-floating hud-bottom-right" style="background: rgba(10, 15, 30, 0.65); border: 1px solid rgba(255,255,255,0.06); padding: 0.65rem 1.0rem; border-radius: 12px; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; pointer-events: none;">
+            <span style="color: var(--accent-pink); font-weight: bold;">Sign: 👉</span>
+            <span id="live-sign-val" style="color: white; font-weight: 600;">None</span>
+          </div>
+
+          <!-- Practice Pause Alert Indicator -->
+          <div class="practice-pause-indicator" id="practice-pause-alert" style="z-index: 4;">Matched Sign Required. Waiting...</div>
+
+          <!-- Tutorial Overlay Instruction Box -->
+          <div class="tutorial-overlay-box" id="tutorial-box" style="position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 550px; z-index: 4; background: rgba(9, 13, 22, 0.85); backdrop-filter: blur(10px);">
+            <div class="tutorial-step-title">
+              <span style="font-weight: 800; font-size: 1.4rem; color: var(--accent-cyan);" id="tutorial-title-val">Tutorial: Do (C)</span>
+              <button id="btn-skip-tutorial">Skip ⏭️</button>
+            </div>
+            <p class="tutorial-instruction-text" id="tutorial-instruction-val" style="font-size: 1.1rem; margin-bottom: 0.75rem;">Hold a fist shape (DO) with your right hand...</p>
+            <div class="tutorial-progress-container">
+              <span style="font-size: 0.95rem; font-weight: 700; color: var(--text-secondary);">Hold Target:</span>
+              <div class="tutorial-progress-bar-bg" style="height: 8px;">
+                <div class="tutorial-progress-bar-fill" id="tutorial-progress-fill"></div>
+              </div>
+              <span style="font-size: 1.05rem; font-weight: 800; font-family: monospace; color: var(--accent-cyan);" id="tutorial-time-val">0.0s / 1.5s</span>
+            </div>
+          </div>
+
+          <!-- Rhythm Lane Canvas Overlay (Absolute Bottom position) -->
+          <div class="track-container" id="arena-track-container" style="position: absolute; bottom: 0; left: 0; width: 100%; border: none; border-radius: 0; background: rgba(10, 15, 30, 0.55); border-top: 1px solid rgba(255,255,255,0.06); height: 160px; z-index: 3;">
+            <canvas class="track-canvas" id="game-canvas" style="height: 100%; width: 100%;"></canvas>
+          </div>
+
+          <!-- SLIDING DRAWER 1: Level Selector Drawer (Slides in from Left) -->
+          <div class="game-drawer" id="levels-drawer" style="position: absolute; left: 0; top: 0; height: 100%; width: 340px; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(10, 15, 30, 0.92); backdrop-filter: blur(15px); border-right: 1px solid rgba(255,255,255,0.08); z-index: 5; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h2 class="card-title" style="margin-bottom: 0; font-size: 1.2rem;">Level Directory</h2>
+              <button id="btn-close-levels" class="drawer-close-btn">✕ Close</button>
+            </div>
+            
+            <div style="margin-top: 0.25rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <span class="hud-label" style="margin-bottom: 0;">Gameplay Mode</span>
+                <span id="selected-mode-indicator" style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Challenge</span>
+              </div>
+              <div class="mode-toggle">
+                <button id="mode-practice" class="mode-btn" style="font-size: 0.75rem; padding: 0.4rem;">Practice</button>
+                <button id="mode-challenge" class="mode-btn active" style="font-size: 0.75rem; padding: 0.4rem;">Challenge</button>
+              </div>
+            </div>
+
+            <span class="hud-label">Select Exercise</span>
+            <div class="song-list-container" id="song-list" style="flex: 1; max-height: none;">
+              <div style="padding: 1rem; text-align: center; color: var(--text-secondary);">Loading levels database...</div>
+            </div>
+
+            <!-- Custom Level Upload -->
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span class="hud-label" style="margin-bottom: 0;">Import Custom Level</span>
+              <div id="custom-level-dropzone" class="custom-level-dropzone" title="Drag & drop a level JSON or click to browse">
+                <div class="custom-level-dropzone-inner">
+                  <span class="custom-level-dropzone-icon">📂</span>
+                  <span class="custom-level-dropzone-text">Drop JSON here or <u>click to browse</u></span>
+                  <span class="custom-level-dropzone-hint">Level JSON from Song Maker</span>
+                </div>
+                <input type="file" id="custom-level-file-input" accept=".json,application/json" style="display:none;">
+              </div>
+              <div id="custom-level-feedback" style="display:none; font-size:0.75rem; border-radius:8px; padding: 0.4rem 0.65rem;"></div>
+              <button id="btn-clear-custom-levels" class="drawer-close-btn" style="width: 100%; justify-content: center; color: #f87171; border-color: rgba(239,68,68,0.2);">🗑️ Clear All Custom Levels</button>
+            </div>
+          </div>
+
+          <!-- SLIDING DRAWER 2: Settings Drawer (Slides in from Right) -->
+          <div class="game-drawer" id="settings-drawer" style="position: absolute; right: 0; top: 0; height: 100%; width: 340px; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(10, 15, 30, 0.92); backdrop-filter: blur(15px); border-left: 1px solid rgba(255,255,255,0.08); z-index: 5; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h2 class="card-title" style="margin-bottom: 0; font-size: 1.2rem;">Audio & Input</h2>
+              <button id="btn-close-settings" class="drawer-close-btn">✕ Close</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+              <span class="hud-label">Master Volume</span>
+              <input type="range" id="synth-volume" min="0" max="0.8" step="0.05" value="0.3" class="synth-slider" style="width: 100%;">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 0.6rem 0.85rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+              <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Left-Handed Mode</span>
+              <label class="toggle-switch" style="transform: scale(0.85);">
+                <input type="checkbox" id="hand-roles-lefty">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="viewport-controls" style="flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+              <button id="btn-power-camera" class="control-btn" style="width: 100%;">
+                <span class="btn-icon">🔌</span> Stop Camera
+              </button>
+              <button id="btn-toggle-camera" class="control-btn" style="width: 100%;">
+                <span class="btn-icon">👁️</span> Hide Camera Feed
+              </button>
+              <button id="btn-toggle-skeleton" class="control-btn" style="width: 100%;">
+                <span class="btn-icon">🕸️</span> Show Skeleton
+              </button>
+              <button id="btn-toggle-sound" class="control-btn" style="width: 100%;">
+                <span class="btn-icon">🔊</span> Mute Sound
+              </button>
+            </div>
+
+            <!-- Hand Calibration Section -->
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+              <span class="hud-label" style="margin-bottom: 0.2rem;">Hand Calibration</span>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                Hold target sign with your note hand, select note below, and click calibrate to overwrite with custom template.
+              </p>
+              
+              <div style="display: flex; gap: 0.5rem; width: 100%;">
+                <select id="calibrate-select" class="synth-select" style="flex: 1; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 0.4rem; font-size: 0.85rem;">
+                  <option value="DO">Do (C)</option>
+                  <option value="RE">Re (D)</option>
+                  <option value="MI">Mi (E)</option>
+                  <option value="FA">Fa (F)</option>
+                  <option value="SOL">Sol (G)</option>
+                  <option value="LA">La (A)</option>
+                  <option value="TI">Ti (B)</option>
+                </select>
+                <button id="btn-rhythm-calibrate" class="control-btn" style="flex: 1.2; font-size: 0.8rem; padding: 0.4rem; border-radius: 8px;">
+                  📸 Calibrate Note
+                </button>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; width: 100%;">
+                <button id="btn-rhythm-export" class="control-btn" style="flex: 1; font-size: 0.75rem; padding: 0.4rem; border-radius: 8px;" title="Export Solfege templates as JSON">
+                  💾 Export JSON
+                </button>
+                <button id="btn-rhythm-reset" class="control-btn" style="flex: 1; font-size: 0.75rem; padding: 0.4rem; border-radius: 8px;" title="Reset all custom Solfege templates">
+                  🔄 Reset Custom
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LEVEL END: Results Modal (Absolute Center Overlay) -->
+          <div class="results-overlay" id="results-overlay" style="z-index: 10; border-radius: 24px; position: absolute; inset: 0;">
+            <div class="results-card" style="background: rgba(18, 26, 46, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; max-width: 380px;">
+              <h2 class="results-title" id="results-level-title" style="font-size: 1.35rem;">Song Complete!</h2>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;" id="results-subtitle">Accuracy & Rank Score</p>
+              
+              <div class="rank-badge-container" id="results-rank-container" style="margin: 0.5rem 0;">
+                <span class="rank-badge rank-S" id="results-rank" style="font-size: 4rem;">S</span>
+              </div>
+
+              <div class="stats-grid" id="results-stats-grid" style="grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0;">
+                <div class="stat-item" style="padding: 0.5rem;">
+                  <div class="stat-label">Final Score</div>
+                  <div class="stat-value" id="results-score" style="color: var(--accent-cyan); font-size: 1.1rem;">0</div>
+                </div>
+                <div class="stat-item" style="padding: 0.5rem;">
+                  <div class="stat-label">Max Combo</div>
+                  <div class="stat-value" id="results-combo" style="color: var(--accent-pink); font-size: 1.1rem;">0</div>
+                </div>
+                <div class="stat-item" style="padding: 0.5rem;">
+                  <div class="stat-label">Accuracy</div>
+                  <div class="stat-value" id="results-accuracy" style="color: var(--accent-emerald); font-size: 1.1rem;">100.0%</div>
+                </div>
+                <div class="stat-item" style="padding: 0.5rem;">
+                  <div class="stat-label">Hits / Total</div>
+                  <div class="stat-value" id="results-hitratio" style="font-size: 1.1rem;">0 / 0</div>
+                </div>
+              </div>
+
+              <!-- Message container for custom skip/completion flows -->
+              <p id="results-message" style="display: none; font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); margin: 1.2rem 0; text-align: center;"></p>
+
+              <div class="results-actions" style="gap: 0.5rem;">
+                <button class="results-btn results-btn-secondary" id="results-btn-songs" style="padding: 0.6rem; font-size: 0.85rem;">Levels List</button>
+                <button class="results-btn results-btn-primary" id="results-btn-retry" style="padding: 0.6rem; font-size: 0.85rem;">Retry 🔄</button>
+                <button class="results-btn results-btn-primary" id="results-btn-next" style="padding: 0.6rem; font-size: 0.85rem; display: none;">Proceed ➡️</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CONTROLS DOCKED IN WEB VIEWPORT -->
+
+      </div>
+    </main>
+
+    <footer class="app-footer" style="margin-top: 1.5rem;">
+      <p>Powered by MediaPipe Tasks Vision &bull; Built for Inclusive Education</p>
+    </footer>
+  </div>
+
+  <!-- Entry Script for the Game -->
+  <script type="module" src="js/rhythm/main.js"></script>
+</body>
+</html>

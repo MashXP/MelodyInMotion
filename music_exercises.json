@@ -1,0 +1,585 @@
+[
+  {
+    "id": "tutorial_solfege",
+    "title": "Tutorial: Solfège Basics",
+    "description": "Learn the 7 core Solfège hand signs at octave C4 (3 fingers on left hand). Show the sign and hold it to proceed.",
+    "isTutorial": true,
+    "bpm": 60,
+    "notes": [
+      {
+        "beat": 4,
+        "note": "DO",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Form a Fist (DO) with your sign hand. Extend 3 fingers on your octave hand for C4."
+      },
+      {
+        "beat": 8,
+        "note": "RE",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Open your hand and point fingers down-forward at an angle (RE) at octave C4."
+      },
+      {
+        "beat": 12,
+        "note": "MI",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Keep your hand flat and horizontal (MI) parallel to the floor at octave C4."
+      },
+      {
+        "beat": 16,
+        "note": "FA",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Form a thumbs down shape (FA) pointing your thumb towards the floor at octave C4."
+      },
+      {
+        "beat": 20,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Show your flat palm sideways (SOL) facing left/sideways at octave C4."
+      },
+      {
+        "beat": 24,
+        "note": "LA",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Curve your fingers downwards in a soft claw shape (LA) facing the floor at octave C4."
+      },
+      {
+        "beat": 28,
+        "note": "TI",
+        "octave": 4,
+        "duration": 2,
+        "instruction": "Point straight up with your index finger (TI) at octave C4."
+      }
+    ]
+  },
+  {
+    "id": "scale_ascent_descent",
+    "title": "Level 1: Do-Re-Mi Ascent & Descent",
+    "description": "Ascend and descend the scale. Keep your rhythm steady and hold each note for its full duration!",
+    "isTutorial": false,
+    "bpm": 80,
+    "notes": [
+      {
+        "beat": 4,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 6,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 8,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 10,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 12,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 14,
+        "note": "LA",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 16,
+        "note": "TI",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 18,
+        "note": "DO",
+        "octave": 5,
+        "duration": 0.6
+      },
+      {
+        "beat": 22,
+        "note": "TI",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 24,
+        "note": "LA",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 26,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 28,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 30,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 32,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.3
+      },
+      {
+        "beat": 34,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.6
+      }
+    ]
+  },
+  {
+    "id": "twinkle_twinkle",
+    "title": "Level 2: Twinkle Twinkle Little Star",
+    "description": "Play this classic lullaby using Solfège signs at octave C4. Watch out for the long notes!",
+    "isTutorial": false,
+    "bpm": 60,
+    "notes": [
+      {
+        "beat": 4,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 5,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 6,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 7,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 8,
+        "note": "LA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 9,
+        "note": "LA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 10,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 1.0
+      },
+      {
+        "beat": 13,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 14,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 15,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 16,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 17,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 18,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 19,
+        "note": "DO",
+        "octave": 4,
+        "duration": 1.0
+      },
+      {
+        "beat": 22,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 23,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 24,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 25,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 26,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 27,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 28,
+        "note": "RE",
+        "octave": 4,
+        "duration": 1.0
+      },
+      {
+        "beat": 31,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 32,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 33,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 34,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 35,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 36,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 37,
+        "note": "RE",
+        "octave": 4,
+        "duration": 1.0
+      },
+      {
+        "beat": 40,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 41,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 42,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 43,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 44,
+        "note": "LA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 45,
+        "note": "LA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 46,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 1.0
+      },
+      {
+        "beat": 49,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 50,
+        "note": "FA",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 51,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 52,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 53,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 54,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.5
+      },
+      {
+        "beat": 55,
+        "note": "DO",
+        "octave": 4,
+        "duration": 1.0
+      }
+    ]
+  },
+  {
+    "id": "mary_lamb",
+    "title": "Level 3: Mary Had a Little Lamb",
+    "description": "Play this sweet melody using Solfège signs at octave C4. Watch out for the dotted quarter and eighth note syncopation!",
+    "isTutorial": false,
+    "bpm": 60,
+    "notes": [
+      {
+        "beat": 4.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 1.2
+      },
+      {
+        "beat": 5.5,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.4
+      },
+      {
+        "beat": 6.0,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 7.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 8.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 9.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 10.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 1.6
+      },
+      {
+        "beat": 12.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 13.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 14.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 1.6
+      },
+      {
+        "beat": 16.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 17.0,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 18.0,
+        "note": "SOL",
+        "octave": 4,
+        "duration": 1.6
+      },
+      {
+        "beat": 20.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 1.2
+      },
+      {
+        "beat": 21.5,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.4
+      },
+      {
+        "beat": 22.0,
+        "note": "DO",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 23.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 24.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 25.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 26.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 27.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 28.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 29.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 30.0,
+        "note": "MI",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 31.0,
+        "note": "RE",
+        "octave": 4,
+        "duration": 0.8
+      },
+      {
+        "beat": 32.0,
+        "note": "DO",
+        "octave": 4,
+        "duration": 3.2
+      }
+    ]
+  }
+]
