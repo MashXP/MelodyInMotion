@@ -130,11 +130,16 @@ export function updateHudUI() {
 }
 
 export function setupListeners() {
-  // Drawer toggles
-  dom.btnToggleLevels.addEventListener("click", () => {
-    dom.settingsDrawer.classList.remove("active");
-    dom.levelsDrawer.classList.toggle("active");
-  });
+  // Dynamic Home/Levels Link
+  const referrerDir = localStorage.getItem("signquest_referrer") || "root";
+  const homeLink = referrerDir === "datbranch" ? "datbranch/level-select.html" : "level-select.html";
+  
+  if (dom.btnToggleLevels) {
+    dom.btnToggleLevels.setAttribute("href", homeLink);
+    dom.btnToggleLevels.addEventListener("click", () => {
+      dom.settingsDrawer.classList.remove("active");
+    });
+  }
 
   dom.btnCloseLevels.addEventListener("click", () => {
     dom.levelsDrawer.classList.remove("active");
@@ -164,24 +169,30 @@ export function setupListeners() {
   });
 
   // Play button click
-  dom.btnGamePlay.addEventListener("click", () => {
-    if (gameState.isPlayingGame) {
-      stopGame();
-    } else {
-      startGame();
-    }
-  });
+  if (dom.btnGamePlay) {
+    dom.btnGamePlay.addEventListener("click", () => {
+      if (gameState.isPlayingGame) {
+        stopGame();
+      } else {
+        startGame();
+      }
+    });
+  }
 
   // Stop button click
-  dom.btnGameStop.addEventListener("click", stopGame);
+  if (dom.btnGameStop) {
+    dom.btnGameStop.addEventListener("click", stopGame);
+  }
 
   // Skip Tutorial Button
-  dom.btnSkipTutorial.addEventListener("click", skipTutorial);
+  if (dom.btnSkipTutorial) {
+    dom.btnSkipTutorial.addEventListener("click", skipTutorial);
+  }
 
   // Results Buttons
   dom.resultsBtnSongs.addEventListener("click", () => {
     dom.resultsOverlay.classList.remove("active");
-    dom.levelsDrawer.classList.add("active"); // open levels drawer
+    window.location.href = homeLink;
   });
 
   dom.resultsBtnRetry.addEventListener("click", () => {

@@ -1,5 +1,5 @@
 export const HIT_ZONE_X = 120;
-export const BEAT_WIDTH = 150; // pixels per beat
+export const BEAT_WIDTH = 220; // pixels per beat
 export const NOTE_RADIUS = 30;
 export const TUTORIAL_REQUIRED_HOLD = 1.5; // seconds
 export const LOSS_THRESHOLD = 8; // frames

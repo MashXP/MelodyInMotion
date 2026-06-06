@@ -1,0 +1,600 @@
+@import url('../style.css');
+
+/* --- GLOBAL TYPOGRAPHY OVERRIDES --- */
+body, button, a, h1, h2, h3, h4, h5, h6, 
+.welcome-title, .welcome-subtitle, .song-title, .song-desc, 
+.btn-subtext, strong, .selection-title, .selection-subtitle,
+.logo-area h1 span.badge, .hud-lbl, .hud-val, .hud-floating,
+.tutorial-step-title, .tutorial-instruction-text, .tutorial-progress-container,
+.results-title, .stat-label, .stat-value, .results-btn {
+  font-family: 'Itim', 'Fredoka', 'Cabin Sketch', cursive, sans-serif !important;
+}
+
+body {
+  background-color: #fafaf9 !important; /* Warm, paper-like background */
+  background-image: 
+    /* Staff lines background repeating */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='150'><line x1='0' y1='40' x2='100' y2='40' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='48' x2='100' y2='48' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='56' x2='100' y2='56' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='64' x2='100' y2='64' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/><line x1='0' y1='72' x2='100' y2='72' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='3 4'/></svg>") !important;
+  background-repeat: repeat !important;
+  background-position: left top !important;
+  color: #1e293b !important;
+}
+
+/* App Container Layout Adjustments */
+.app-container {
+  background: transparent !important;
+  max-width: 1400px !important;
+  width: 95% !important;
+  margin: 0 auto !important;
+  padding: 1rem 2rem !important;
+}
+
+/* Header Override */
+.app-header {
+  background: #ffffff !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 16px !important;
+  box-shadow: 8px 8px 0px #1e293b !important;
+  padding: 1rem 2rem !important;
+  margin: 1.5rem auto 1rem auto !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 1320px !important;
+}
+
+.logo-area h1 {
+  font-size: 2rem !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #1e293b !important;
+  text-shadow: 2px 2px 0px rgba(99, 102, 241, 0.2) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.logo-area h1 span.badge {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  border: 2.5px solid #1e293b !important;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+  background: #c084fc !important; /* Solid marker purple */
+  padding: 0.2rem 0.6rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* Neubrutalist Buttons */
+.control-btn, .results-btn, #btn-skip-tutorial, .drawer-close-btn, .mode-btn {
+  border: 3px solid #1e293b !important;
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  transition: all 0.15s ease !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
+}
+
+/* Button Hover & Active States */
+.control-btn:hover, .results-btn:hover, #btn-skip-tutorial:hover, .drawer-close-btn:hover, .mode-btn:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+  background-color: #f8fafc !important;
+}
+
+.control-btn:active, .results-btn:active, #btn-skip-tutorial:active, .drawer-close-btn:active, .mode-btn:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0px 0px 0px #1e293b !important;
+}
+
+/* Header Links styled as buttons */
+.app-header a {
+  border: 3px solid #1e293b !important;
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  transition: all 0.15s ease !important;
+  font-weight: 700 !important;
+  padding: 0.6rem 1.2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.app-header a:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+.app-header a:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0px 0px 0px #1e293b !important;
+}
+
+/* Primary buttons (like Start/Retry) highlighted yellow */
+#btn-game-play, .results-btn-primary {
+  background-color: #fef08a !important; /* Highlighter yellow */
+  background-image: none !important;
+  color: #1e293b !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+}
+
+#btn-game-play:hover, .results-btn-primary:hover {
+  background-color: #fef9c3 !important;
+}
+
+/* Stop/Cancel buttons highlighted red */
+#btn-game-stop, #btn-skip-tutorial {
+  background-color: #fca5a5 !important; /* Pastel red */
+  color: #1e293b !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+}
+
+#btn-game-stop:hover:not(:disabled), #btn-skip-tutorial:hover {
+  background-color: #fecaca !important;
+  color: #1e293b !important;
+}
+
+#btn-game-stop:disabled {
+  background-color: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Game Center & Video Container */
+.video-container {
+  border: 4.5px solid #1e293b !important;
+  border-radius: 24px !important;
+  box-shadow: 10px 10px 0px #1e293b !important;
+  background-color: #04060b !important;
+}
+
+/* Drawers */
+.game-drawer {
+  position: fixed !important;
+  top: 0 !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  overflow-y: auto !important;
+  background-color: #ffffff !important;
+  border: 4px solid #1e293b !important;
+  color: #1e293b !important;
+  box-shadow: -8px 8px 0px #1e293b !important;
+  box-sizing: border-box !important;
+}
+
+#levels-drawer {
+  box-shadow: 8px 8px 0px #1e293b !important;
+}
+
+/* Adjust drawer title and heading colors */
+.game-drawer h2, .game-drawer .hud-label {
+  color: #1e293b !important;
+}
+
+/* Custom Level Upload Zone */
+.custom-level-dropzone {
+  border: 2.5px dashed #1e293b !important;
+  background: #fafaf6 !important;
+  border-radius: 12px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  color: #1e293b !important;
+}
+
+.custom-level-dropzone:hover {
+  background: #f1f5f9 !important;
+}
+
+.custom-level-dropzone-text {
+  color: #1e293b !important;
+}
+
+.custom-level-dropzone-text u {
+  color: #a855f7 !important; /* purple */
+}
+
+/* Clear Levels button */
+#btn-clear-custom-levels {
+  color: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+/* Mode selectors */
+.mode-toggle {
+  border: 2.5px solid #1e293b !important;
+  background: #fafaf6 !important;
+  border-radius: 10px !important;
+}
+
+.mode-btn {
+  box-shadow: none !important;
+  border: none !important;
+  font-size: 0.8rem !important;
+  color: #475569 !important;
+}
+
+.mode-btn.active {
+  background-color: #bae6fd !important; /* pastel blue selector */
+  border: 2px solid #1e293b !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+  color: #1e293b !important;
+}
+
+/* Song Item Directory Cards */
+.song-item {
+  background: #ffffff !important;
+  border: 2.5px solid #1e293b !important;
+  box-shadow: 3px 3px 0px #1e293b !important;
+  color: #1e293b !important;
+  transition: all 0.15s ease !important;
+}
+
+.song-item:hover {
+  transform: translate(1px, 1px) !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+  background: #f8fafc !important;
+}
+
+.song-item.active {
+  background: #fed7aa !important; /* marker active card */
+  box-shadow: 3px 3px 0px #1e293b !important;
+}
+
+.song-title, .song-desc, .song-meta {
+  color: #1e293b !important;
+}
+
+/* Floating HUDs Over Video */
+.hud-floating {
+  background-color: #ffffff !important;
+  border: 3px solid #1e293b !important;
+  border-radius: 14px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  color: #1e293b !important;
+  padding: 0.65rem 1rem !important;
+}
+
+.hud-top-right, .game-controls-bar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.hud-block {
+  background-color: #ffffff !important;
+  border: 3px solid #1e293b !important;
+  border-radius: 12px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  color: #1e293b !important;
+  padding: 0.4rem 0.8rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.hud-lbl {
+  color: #475569 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+.hud-val {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  font-size: 1.5rem !important;
+  color: #1e293b !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+}
+
+.hud-val.glow-pink {
+  color: #db2777 !important; /* Dark solid pink */
+}
+
+.hud-val.glow-cyan {
+  color: #0891b2 !important; /* Dark solid cyan */
+}
+
+.rank-badge-glow {
+  color: #dc2626 !important; /* Solid red for S rank */
+  text-shadow: none !important;
+}
+
+#hud-level-title {
+  color: #1e293b !important;
+  text-shadow: none !important;
+}
+
+#hud-bpm-label {
+  color: #475569 !important;
+  text-shadow: none !important;
+}
+
+/* Controls Pull-Up Dock */
+#btn-toggle-controls {
+  background: #ffffff !important;
+  border: 3px solid #1e293b !important;
+  border-bottom: none !important;
+  color: #1e293b !important;
+  border-radius: 14px 14px 0 0 !important;
+  box-shadow: 0 -4px 0px #1e293b !important;
+}
+
+#btn-toggle-controls:hover {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+#game-controls-row {
+  background: #ffffff !important;
+  border: 3px solid #1e293b !important;
+  box-shadow: 6px 6px 0px #1e293b !important;
+  border-radius: 16px !important;
+}
+
+/* HUD Live values bottom indicators */
+#live-octave-val, #live-sign-val {
+  color: #1e293b !important;
+}
+
+/* Practice Pause Alert */
+.practice-pause-indicator {
+  background: #fca5a5 !important;
+  color: #1e293b !important;
+  border: 3px solid #1e293b !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+}
+
+/* Tutorial Box Overlay */
+.tutorial-overlay-box {
+  background: #ffffff !important;
+  border: 3.5px solid #1e293b !important;
+  box-shadow: 6px 6px 0px #1e293b !important;
+  color: #1e293b !important;
+}
+
+/* Results Overlay Card */
+.results-card {
+  background: #ffffff !important;
+  border: 4.5px solid #1e293b !important;
+  box-shadow: 10px 10px 0px #1e293b !important;
+  border-radius: 24px !important;
+  color: #1e293b !important;
+}
+
+.results-title {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #1e293b !important;
+  color: #1e293b !important;
+  font-weight: 800 !important;
+}
+
+.results-overlay p {
+  color: #475569 !important;
+}
+
+.stat-item {
+  background: #fafaf6 !important;
+  border: 2px solid #1e293b !important;
+  border-radius: 10px !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+}
+
+.stat-label {
+  color: #475569 !important;
+}
+
+.stat-value {
+  color: #1e293b !important;
+}
+
+/* Settings drop-down list */
+.synth-select {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border: 2.5px solid #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* Track container and timeline */
+.track-container {
+  background: #ffffff !important; /* Neubrutalist paper-white */
+  border: 3.5px solid #1e293b !important;
+  box-shadow: 8px 8px 0px #1e293b !important;
+  border-radius: 20px !important;
+}
+
+/* Range input neubrutalist override */
+.synth-slider {
+  -webkit-appearance: none !important;
+  background: #e2e8f0 !important;
+  border: 2px solid #1e293b !important;
+  height: 10px !important;
+}
+
+.synth-slider::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 20px !important;
+  height: 20px !important;
+  border: 2.5px solid #1e293b !important;
+  background: #bae6fd !important; /* pastel blue thumb */
+  box-shadow: 2px 2px 0px #1e293b !important;
+}
+
+.synth-slider::-webkit-slider-thumb:hover {
+  background: #fed7aa !important; /* pastel orange hover */
+}
+
+/* Checkbox toggle neubrutalist style */
+.toggle-slider {
+  background-color: #e2e8f0 !important;
+  border: 2.5px solid #1e293b !important;
+}
+
+.toggle-slider:before {
+  background-color: #ffffff !important;
+  border: 2.5px solid #1e293b !important;
+  width: 14px !important;
+  height: 14px !important;
+  left: 2px !important;
+  bottom: 2px !important;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #86efac !important; /* Pastel green on checked */
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(18px) !important;
+}
+
+/* Responsiveness for game-bottom-split */
+@media (max-width: 850px) {
+  .game-bottom-split {
+    flex-direction: column !important;
+  }
+  #webcam-viewport {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .live-action-hud {
+    width: 100% !important;
+  }
+}
+
+/* Hand Pose Guide Card Layout (Handsign + Description) */
+.guide-card-panel {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 3.5rem !important;
+  background: #ffffff !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 30px 10px 30px 10px/10px 30px 10px 30px !important;
+  padding: 1.5rem 3rem !important;
+  box-shadow: 8px 8px 0px #1e293b !important;
+  position: relative !important;
+  max-height: 270px !important;
+  height: 270px !important;
+  box-sizing: border-box !important;
+}
+
+.guide-illustration {
+  height: 180px !important;
+  width: 180px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+#handsign-hint-img {
+  max-height: 100% !important;
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  transition: transform 0.2s ease !important;
+}
+
+#handsign-hint-img:hover {
+  transform: scale(1.05) !important;
+}
+
+.tutorial-instruction-text {
+  font-size: 1.4rem !important;
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  line-height: 1.45 !important;
+  text-align: left !important;
+  max-width: 450px !important;
+}
+
+@media (max-width: 850px) {
+  .guide-card-panel {
+    flex-direction: column !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 1.5rem !important;
+    gap: 1.5rem !important;
+    text-align: center !important;
+  }
+  .tutorial-instruction-text {
+    text-align: center !important;
+    font-size: 1.25rem !important;
+  }
+  .guide-illustration {
+    height: 140px !important;
+    width: 140px !important;
+  }
+}
+
+/* ===== Floating Animated Music Notes (GPU-optimised) ===== */
+.floating-notes-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  contain: layout style;   /* isolate from page layout */
+}
+
+.floating-note {
+  position: absolute;
+  left: -8%;               /* static start — NOT animated, avoids layout cost */
+  font-family: 'Itim', sans-serif;
+  color: rgba(0, 0, 0, 0.25);
+  font-weight: bold;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  will-change: transform, opacity;   /* promote to own compositor layer */
+  animation: floatNote 24s linear infinite;
+}
+
+/* 12 notes — varied sizes, rows, timings */
+.note-1  { font-size: 6rem;   top:  8%; animation-duration: 28s; animation-delay:  0s;   }
+.note-2  { font-size: 3rem;   top: 22%; animation-duration: 20s; animation-delay: -4s;   }
+.note-3  { font-size: 5rem;   top: 40%; animation-duration: 26s; animation-delay: -8s;   }
+.note-4  { font-size: 2.5rem; top: 60%; animation-duration: 17s; animation-delay: -12s;  }
+.note-5  { font-size: 4rem;   top: 78%; animation-duration: 22s; animation-delay: -16s;  }
+.note-6  { font-size: 3.5rem; top: 15%; animation-duration: 24s; animation-delay: -2s;   }
+.note-7  { font-size: 5.5rem; top: 50%; animation-duration: 30s; animation-delay: -6s;   }
+.note-8  { font-size: 2rem;   top: 68%; animation-duration: 18s; animation-delay: -10s;  }
+.note-9  { font-size: 5.8rem; top: 85%; animation-duration: 25s; animation-delay: -14s;  }
+.note-10 { font-size: 4.2rem; top: 32%; animation-duration: 21s; animation-delay: -18s;  }
+.note-11 { font-size: 2.8rem; top: 55%; animation-duration: 19s; animation-delay: -3s;   }
+.note-12 { font-size: 4.8rem; top: 92%; animation-duration: 23s; animation-delay: -9s;   }
+
+/* Only transform + opacity — both compositor-only, zero layout/paint cost */
+@keyframes floatNote {
+  0%   { transform: translateX(0)      translateY(0);     opacity: 0; }
+  8%   { opacity: 0.75; }
+  92%  { opacity: 0.75; }
+  100% { transform: translateX(115vw)  translateY(-60px); opacity: 0; }
+}

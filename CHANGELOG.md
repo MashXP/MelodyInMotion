@@ -5,10 +5,29 @@ All notable changes to the SignQuest Sandbox project are documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2026-06-06
+## [2.1.0] - 2026-06-06
+
+### Added
+- **Introduction Screen (`intro.html`)**: A dedicated landing/welcome screen introducing users to Solfège hand signs, support for camera calibration, and multi-language translations (English, Vietnamese, Korean).
+- **Level Selection Portal (`level-select.html`)**: A central lessons menu supporting translation languages, tabs to choose core lessons vs. custom levels, dynamic level lists, and a drag-and-drop file import zone for custom JSON songs.
+- **Visual Feedback Particle Effects**: Interactive particle burst explosions (`spawnHitBurst`) at the timeline hit-zone upon successful note match.
+- **Dynamic Hand Sign Visual Guide**: Integrated a guide panel showing the active note's correct ASL handsign illustration (`public/handsign/${label}.png`) in real time to assist learners.
+
+### Changed
+- **Song Maker Neubrutalist Overhaul**: Redesigned the entire editor (`song_maker.html` & `styles/song_maker.css`) from dark mode to a premium light-themed neubrutalist UI. Added vertical lane color indicators on piano roll labels, custom modals, high contrast textareas, and linked it with `styles/rhythm.css` for aesthetic consistency.
+- **Game Mode Toggles**: Color-coded gameplay mode toggles inside Level Select (yellow for Practice, red `#fca5a5` for Challenge mode).
+- **Octave Locking**: Temporarily locked the active octave to C4, counting notes on other octaves as matching automatically, to improve hand tracking stability.
+- **Auto-Start Level**: Webcam processing now triggers `startGame()` automatically as soon as the note hand becomes visible on camera.
+- **Timeline Geometry**: Increased `BEAT_WIDTH` from 150 to 220 pixels per beat for a more spaced, legible timeline track.
+- **Warmth Oscillator Detune**: Adjusted secondary synth oscillator (`osc2`) detune from `freq * 1.005` to exactly `freq` to eliminate chorus flanging/phase jitter.
+
+### Performance
+- **Cached Static Canvas Layer**: Added an offscreen canvas caching method `ensureStaticLayer()` to render staff lines and treble clefs once, reducing redundant layout/paint costs on each frame.
+- **Text Caching in HUD**: Added caching gates for live octave and live sign indicators, avoiding writing to DOM `innerText` on every frame.
 
 ### Fixed
 - **Mi Note Missing Color Tag**: `MI` in `js/music.js` was referencing an undefined CSS variable `var(--accent-index)`, causing the Mi keyboard card in SignMusic Studio to render with no color indicator. Replaced with the correct amber hex `#f59e0b`, consistent with `js/rhythm/constants.js`.
+- **Grace Loss Handling**: Hand tracking now debounces momentary tracking losses up to 8 frames (`LOSS_THRESHOLD`) before registering hand loss, resolving note hold dropouts.
 
 ---
 

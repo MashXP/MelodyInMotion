@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melody in Motion - Select Level</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Itim&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles/rhythm.css">
+  <style>
+    .selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .song-card {
+      background: #ffffff;
+      border: 3.5px solid #1e293b;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 6px 6px 0px #1e293b;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+
+    .song-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0px #1e293b;
+    }
+
+    .song-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .difficulty-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: white;
+      border: 2px solid #1e293b;
+      border-radius: 20px;
+      padding: 0.15rem 0.6rem;
+      box-shadow: 2px 2px 0px #1e293b;
+    }
+
+    .diff-beginner {
+      background: #cbd5e1;
+      color: #1e293b;
+    }
+
+    .diff-easy {
+      background: #86efac;
+      color: #1e293b;
+    }
+
+    .diff-medium {
+      background: #bae6fd;
+      color: #1e293b;
+    }
+
+    .diff-hard {
+      background: #fca5a5;
+      color: #1e293b;
+    }
+
+    .diff-custom {
+      background: #f5d0fe;
+      color: #1e293b;
+    }
+
+    .song-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .song-desc {
+      font-size: 0.85rem;
+      color: #475569;
+      margin: 0;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .song-meta {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .play-btn {
+      width: 100%;
+      text-align: center;
+      padding: 0.5rem 0.75rem;
+      border: 2.5px solid #1e293b !important;
+      box-shadow: 3px 3px 0px #1e293b !important;
+      font-size: 0.95rem;
+      display: block;
+      box-sizing: border-box;
+    }
+
+    .play-btn-primary {
+      background: #fef08a !important;
+      /* Yellow */
+    }
+
+    .play-btn-primary:hover {
+      background: #fef9c3 !important;
+    }
+
+    .custom-section {
+      background: #ffffff;
+      border: 3.5px solid #1e293b;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 8px 8px 0px #1e293b;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .custom-level-dropzone {
+      border: 3px dashed #1e293b !important;
+      background: #fafaf9 !important;
+      border-radius: 16px !important;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 4px 4px 0px #1e293b !important;
+      transition: background 0.15s ease;
+    }
+
+    .custom-level-dropzone:hover {
+      background: #f1f5f9 !important;
+    }
+
+    .custom-level-dropzone.dragover {
+      background: #bae6fd !important;
+      border-color: #0284c7 !important;
+    }
+
+    .delete-btn {
+      background: #fca5a5 !important;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.8rem;
+      border: 2px solid #1e293b !important;
+      box-shadow: 2px 2px 0px #1e293b !important;
+    }
+
+    .delete-btn:hover {
+      background: #fecaca !important;
+    }
+
+    .mode-toggle-btn {
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      padding: 0.4rem 1.25rem !important;
+      font-size: 0.95rem !important;
+      background: #ffffff;
+      color: #1e293b;
+      cursor: pointer;
+      font-family: 'Itim', sans-serif !important;
+      font-weight: 700;
+      transition: all 0.1s ease !important;
+    }
+
+    .mode-toggle-btn.active {
+      background-color: #fef08a !important;
+      font-weight: 800 !important;
+    }
+
+    #btn-mode-challenge.active {
+      background-color: #fca5a5 !important;
+    }
+
+    .mode-toggle-btn:not(.active):hover {
+      background-color: #f1f5f9 !important;
+    }
+
+    .tab-btn {
+      font-size: 1.05rem !important;
+      font-weight: 800 !important;
+      border: 3px solid #1e293b !important;
+      box-shadow: 4px 4px 0px #1e293b !important;
+    }
+
+    .tab-btn.active {
+      background-color: #fef08a !important;
+      transform: translate(2px, 2px) !important;
+      box-shadow: 2px 2px 0px #1e293b !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Floating Animated Music Notes Background -->
+  <div class="floating-notes-container">
+    <div class="floating-note note-1">𝄞</div>
+    <div class="floating-note note-2">♪</div>
+    <div class="floating-note note-3">♫</div>
+    <div class="floating-note note-4">♩</div>
+    <div class="floating-note note-5">♬</div>
+    <div class="floating-note note-6">♩</div>
+    <div class="floating-note note-7">♪</div>
+    <div class="floating-note note-8">♫</div>
+    <div class="floating-note note-9">𝄞</div>
+    <div class="floating-note note-10">♬</div>
+    <div class="floating-note note-11">♪</div>
+    <div class="floating-note note-12">♩</div>
+  </div>
+
+  <div class="app-container">
+    <header class="app-header" style="max-width: 1320px !important;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 1rem; flex-wrap: wrap;">
+        <!-- Left: Logo & Title -->
+        <div class="logo-area" style="display: flex; align-items: center; gap: 0.75rem;">
+          <span class="icon" style="font-size: 2rem; line-height: 1;">🎮</span>
+          <div style="display: flex; flex-direction: column;">
+            <h1
+              style="margin: 0; font-size: 1.6rem !important; line-height: 1.2; font-weight: 800; color: #1e293b; text-shadow: none !important;">
+              Melody in Motion</h1>
+            <span style="font-size: 0.85rem; color: #64748b; font-weight: 700; display: inline-block;"
+              id="menu-tagline">Level Selection</span>
+          </div>
+        </div>
+
+        <!-- Right: Actions -->
+        <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: flex-end;">
+          <select id="lang-selector-header" class="control-btn"
+            style="padding: 0.4rem 0.8rem; font-size: 0.9rem; border: 2.5px solid #1e293b !important; box-shadow: 3px 3px 0px #1e293b !important; outline: none; appearance: none; -webkit-appearance: none;">
+            <option value="en">🇺🇸 English</option>
+            <option value="vi">🇻🇳 Tiếng Việt</option>
+            <option value="ko">🇰🇷 한국어</option>
+          </select>
+          <a href="intro.html" class="control-btn"
+            style="padding: 0.5rem 1rem; font-size: 0.9rem; border: 2.5px solid #1e293b !important; box-shadow: 3px 3px 0px #1e293b !important; text-decoration: none;">
+            🏠 Home
+          </a>
+          <!-- <a href="index.html" class="control-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; border: 2.5px solid #1e293b !important; box-shadow: 3px 3px 0px #1e293b !important; text-decoration: none;">
+            &larr; Sandbox
+          </a> -->
+        </div>
+      </div>
+    </header>
+
+    <main
+      style="max-width: 1320px; width: 100%; margin: 1.5rem auto; display: flex; flex-direction: column; gap: 1.5rem;">
+      <!-- Title Section -->
+      <div
+        style="background: #ffffff; border: 3.5px solid #1e293b; border-radius: 20px; padding: 1.5rem; box-shadow: 8px 8px 0px #1e293b; text-align: center;">
+        <h2 id="select-title" style="margin: 0; font-size: 1.8rem; font-weight: 800; color: #1e293b;">Choose a Level
+        </h2>
+        <p id="select-subtitle" style="margin: 0.5rem 0 0 0; color: #475569; font-size: 1rem; font-weight: 500;">
+          Practice your hand signs to complete songs with Melody.</p>
+
+        <!-- Gameplay Mode Toggle -->
+        <div class="mode-select-container"
+          style="display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-top: 1rem;">
+          <span style="font-family: 'Itim', sans-serif; font-weight: 800; font-size: 1.1rem; color: #1e293b;"
+            id="gameplay-mode-label">Gameplay Mode:</span>
+          <div
+            style="display: inline-flex; border: 2.5px solid #1e293b; border-radius: 12px; overflow: hidden; box-shadow: 3px 3px 0px #1e293b;">
+            <button id="btn-mode-practice" class="mode-toggle-btn">
+              Practice
+            </button>
+            <button id="btn-mode-challenge" class="mode-toggle-btn active"
+              style="border-left: 2.5px solid #1e293b !important;">
+              Challenge
+            </button>
+          </div>
+        </div>
+        <!-- Toggle Tabs for Lessons vs Custom -->
+        <div class="tab-select-container"
+          style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.25rem; border-top: 2.5px dashed #cbd5e1; padding-top: 1.25rem;">
+          <button id="tab-core-lessons" class="control-btn tab-btn active" style="padding: 0.5rem 1.25rem !important;">
+            🎵 Core Lessons
+          </button>
+          <button id="tab-custom-levels" class="control-btn tab-btn" style="padding: 0.5rem 1.25rem !important;">
+            📂 Custom Levels
+          </button>
+        </div>
+      </div>
+
+      <!-- Default Levels Grid -->
+      <div id="section-core-lessons">
+        <h3 id="default-levels-heading"
+          style="font-size: 1.3rem; font-weight: 800; color: #1e293b; margin: 0 0 0.5rem 0;">🎵 Core Lessons</h3>
+        <div class="selection-grid" id="default-levels-grid">
+          <!-- Solfège Scale -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="difficulty-badge diff-beginner" id="l1-badge">Beginner</span>
+              <span style="font-size: 1.1rem;">🌱</span>
+            </div>
+            <h4 class="song-title" id="l1-title">Solfège Basics</h4>
+            <p class="song-desc" id="l1-desc">Learn the 7 basic Solfège hand signs (Do, Re, Mi...) at octave C4.</p>
+            <div class="song-meta">
+              <span id="l1-meta-notes">🎵 7 Notes</span>
+              <span id="l1-meta-task">⭐ Basic Practice</span>
+            </div>
+            <a href="music_game.html?id=tutorial_solfege" class="control-btn play-btn play-btn-primary"
+              id="l1-play-btn">Play</a>
+          </div>
+
+          <!-- Do-Re-Mi Ascent/Descent -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="difficulty-badge diff-easy" id="l2-badge">Easy</span>
+              <span style="font-size: 1.1rem;">📈</span>
+            </div>
+            <h4 class="song-title" id="l2-title">Do-Re-Mi Ascent & Descent</h4>
+            <p class="song-desc" id="l2-desc">Ascend and descend the scale. Keep your rhythm steady and match note
+              timings!</p>
+            <div class="song-meta">
+              <span id="l2-meta-notes">🎵 15 Notes</span>
+              <span id="l2-meta-task">⭐ Steady Rhythm</span>
+            </div>
+            <a href="music_game.html?id=scale_ascent_descent" class="control-btn play-btn play-btn-primary"
+              id="l2-play-btn">Play</a>
+          </div>
+
+          <!-- Mary Had a Little Lamb -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="difficulty-badge diff-easy" id="l3-badge">Easy</span>
+              <span style="font-size: 1.1rem;">🐑</span>
+            </div>
+            <h4 class="song-title" id="l3-title">Mary Had a Little Lamb</h4>
+            <p class="song-desc" id="l3-desc">A classic song to practice transitions between Do, Re, Mi, and Sol.</p>
+            <div class="song-meta">
+              <span id="l3-meta-notes">🎵 26 Notes</span>
+              <span id="l3-meta-task">⭐ Fast Transition</span>
+            </div>
+            <a href="music_game.html?id=mary_lamb" class="control-btn play-btn play-btn-primary"
+              id="l3-play-btn">Play</a>
+          </div>
+
+          <!-- Twinkle Twinkle Little Star -->
+          <div class="song-card">
+            <div class="song-card-header">
+              <span class="difficulty-badge diff-medium" id="l4-badge">Medium</span>
+              <span style="font-size: 1.1rem;">⭐</span>
+            </div>
+            <h4 class="song-title" id="l4-title">Twinkle Twinkle Little Star</h4>
+            <p class="song-desc" id="l4-desc">A longer nursery rhyme using almost all Solfège notes at a moderate tempo.
+            </p>
+            <div class="song-meta">
+              <span id="l4-meta-notes">🎵 42 Notes</span>
+              <span id="l4-meta-task">⭐ Rhythm Challenge</span>
+            </div>
+            <a href="music_game.html?id=twinkle_twinkle" class="control-btn play-btn play-btn-primary"
+              id="l4-play-btn">Play</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Levels Section -->
+      <div class="custom-section" id="section-custom-levels" style="display: none;">
+        <h3 id="custom-levels-heading" style="font-size: 1.3rem; font-weight: 800; color: #1e293b; margin: 0;">📂 Import
+          Custom Level</h3>
+
+        <!-- Drag & Drop JSON Import Area -->
+        <div id="custom-level-dropzone" class="custom-level-dropzone">
+          <div style="font-weight: 800; font-size: 1.2rem; color: #1e293b; margin-bottom: 0.25rem;">
+            📂 <span id="dropzone-text">Drop JSON here or click to browse</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #64748b; margin: 0;" id="dropzone-hint">Upload custom level JSON exported
+            from the Song Maker</p>
+          <input type="file" id="custom-level-file-input" accept=".json,application/json" style="display:none;">
+        </div>
+
+        <div id="custom-level-feedback"
+          style="display:none; font-size:0.85rem; border-radius:8px; padding: 0.5rem 0.75rem;"></div>
+
+        <!-- Custom Levels List Grid -->
+        <div style="border-top: 2.5px dashed #1e293b; padding-top: 1rem; margin-top: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h4 id="imported-heading" style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin: 0;">Imported
+              Custom Levels</h4>
+            <button id="btn-clear-custom-levels" class="control-btn delete-btn"
+              style="display: none; padding: 0.35rem 0.75rem;">🗑️ Clear All</button>
+          </div>
+          <div class="selection-grid" id="custom-levels-grid">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Translations database
+    const TRANSLATIONS = {
+      en: {
+        tagline: "Level Selection",
+        title: "Choose a Level",
+        subtitle: "Practice your hand signs to complete songs with Melody.",
+        gameplayMode: "Gameplay Mode:",
+        practice: "Practice",
+        challenge: "Challenge",
+        coreLessons: "Core Lessons",
+        importTitle: "Import Custom Level",
+        dropzoneText: "Drop JSON here or click to browse",
+        dropzoneHint: "Upload custom level JSON exported from the Song Maker",
+        importedTitle: "Imported Custom Levels",
+        clearAll: "Clear All",
+        noCustomMsg: "No custom levels imported yet. Use the zone above to drag & drop level JSON files.",
+        customBadge: "Custom",
+        deleteTooltip: "Delete Level",
+        confirmClear: "Are you sure you want to delete all custom levels?",
+        deletedMsg: "Level deleted successfully.",
+        deleteErrMsg: "Error deleting level.",
+        invalidFormatMsg: "⚠️ Invalid level format. Must have id, title, and notes array.",
+        fileTypeErrorMsg: "⚠️ File must be a .json file.",
+        parseErrMsg: "⚠️ Could not parse JSON. Check file format.",
+        importSuccessMsg: "✅ Imported: {added} added, {updated} updated.",
+        clearSuccessMsg: "All custom levels cleared.",
+        l1: {
+          badge: "Beginner",
+          title: "Solfège Basics",
+          desc: "Learn the 7 basic Solfège hand signs (Do, Re, Mi...) at octave C4.",
+          metaNotes: "🎵 7 Notes",
+          metaTask: "⭐ Basic Practice",
+          play: "Play"
+        },
+        l2: {
+          badge: "Easy",
+          title: "Do-Re-Mi Ascent & Descent",
+          desc: "Ascend and descend the scale. Keep your rhythm steady and match note timings!",
+          metaNotes: "🎵 15 Notes",
+          metaTask: "⭐ Steady Rhythm",
+          play: "Play"
+        },
+        l3: {
+          badge: "Easy",
+          title: "Mary Had a Little Lamb",
+          desc: "A classic song to practice transitions between Do, Re, Mi, and Sol.",
+          metaNotes: "🎵 26 Notes",
+          metaTask: "⭐ Fast Transition",
+          play: "Play"
+        },
+        l4: {
+          badge: "Medium",
+          title: "Twinkle Twinkle Little Star",
+          desc: "A longer nursery rhyme using almost all Solfège notes at a moderate tempo.",
+          metaNotes: "🎵 42 Notes",
+          metaTask: "⭐ Rhythm Challenge",
+          play: "Play"
+        }
+      },
+      vi: {
+        tagline: "Chọn màn chơi",
+        title: "Chọn Màn Chơi",
+        subtitle: "Luyện tập ký hiệu tay để hoàn thành bài hát cùng Melody.",
+        gameplayMode: "Chế độ chơi:",
+        practice: "Luyện tập",
+        challenge: "Thử thách",
+        coreLessons: "Bài Học Cơ Bản",
+        importTitle: "Nhập Màn Chơi Tự Tạo",
+        dropzoneText: "Thả tệp JSON vào đây hoặc click để duyệt tệp",
+        dropzoneHint: "Tải lên tệp JSON màn chơi được xuất từ trình Tạo Bài Hát (Song Maker)",
+        importedTitle: "Màn Chơi Đã Nhập",
+        clearAll: "Xóa tất cả",
+        noCustomMsg: "Chưa có màn chơi tự tạo nào được nhập. Dùng khu vực phía trên để thả file JSON.",
+        customBadge: "Tự tạo",
+        deleteTooltip: "Xóa màn chơi",
+        confirmClear: "Bạn có chắc chắn muốn xóa toàn bộ màn chơi tự tạo?",
+        deletedMsg: "Xóa màn chơi thành công.",
+        deleteErrMsg: "Lỗi khi xóa màn chơi.",
+        invalidFormatMsg: "⚠️ Định dạng màn chơi không hợp lệ. Phải có id, title và mảng notes.",
+        fileTypeErrorMsg: "⚠️ Tệp tải lên phải có định dạng .json.",
+        parseErrMsg: "⚠️ Không thể phân tích cú pháp JSON. Vui lòng kiểm tra lại tệp tin.",
+        importSuccessMsg: "✅ Đã nhập: thêm mới {added}, cập nhật {updated}.",
+        clearSuccessMsg: "Đã xóa toàn bộ màn chơi tự tạo.",
+        l1: {
+          badge: "Khởi đầu",
+          title: "Cơ bản Solfège",
+          desc: "Làm quen với 7 ký hiệu tay Solfège cơ bản (Đô, Rê, Mi...) ở quãng tám C4.",
+          metaNotes: "🎵 7 nốt nhạc",
+          metaTask: "⭐ Luyện tập cơ bản",
+          play: "Chơi"
+        },
+        l2: {
+          badge: "Dễ",
+          title: "Lên & Xuống Thang Âm",
+          desc: "Luyện tập đi lên và đi xuống thang âm. Giữ vững nhịp điệu và nốt nhạc!",
+          metaNotes: "🎵 15 nốt nhạc",
+          metaTask: "⭐ Nhịp điệu vững vàng",
+          play: "Chơi"
+        },
+        l3: {
+          badge: "Dễ",
+          title: "Mary Có Chú Cừu Nhỏ",
+          desc: "Bài hát cổ điển giúp luyện tập chuyển đổi giữa Đô, Rê, Mi và Sol.",
+          metaNotes: "🎵 26 nốt nhạc",
+          metaTask: "⭐ Chuyển nốt nhanh",
+          play: "Chơi"
+        },
+        l4: {
+          badge: "Trung bình",
+          title: "Kìa Con Bướm Vàng / Sao Nhỏ",
+          desc: "Bài hát dài hơn sử dụng hầu hết các nốt Solfège ở tốc độ vừa phải.",
+          metaNotes: "🎵 42 nốt nhạc",
+          metaTask: "⭐ Thử thách nhịp điệu",
+          play: "Chơi"
+        }
+      },
+      ko: {
+        tagline: "레벨 선택",
+        title: "레벨 선택",
+        subtitle: "멜로디와 함께 노래를 완성하기 위해 손기호를 연습해 보세요.",
+        gameplayMode: "게임플레이 모드:",
+        practice: "연습",
+        challenge: "도전",
+        coreLessons: "기본 레슨",
+        importTitle: "사용자 정의 레벨 가져오기",
+        dropzoneText: "여기에 JSON 파일을 드롭하거나 클릭하여 찾아보세요",
+        dropzoneHint: "송 메이커(Song Maker)에서 내보낸 레벨 JSON 업로드",
+        importedTitle: "가져온 커스텀 레벨",
+        clearAll: "모두 지우기",
+        noCustomMsg: "가져온 사용자 정의 레벨이 없습니다. 위의 영역에 JSON 파일을 끌어다 놓으세요.",
+        customBadge: "사용자 정의",
+        deleteTooltip: "레벨 삭제",
+        confirmClear: "모든 사용자 정의 레벨을 삭제하시겠습니까?",
+        deletedMsg: "레벨이 성공적으로 삭제되었습니다.",
+        deleteErrMsg: "레벨 삭제 중 오류가 발생했습니다.",
+        invalidFormatMsg: "⚠️ 잘못된 레벨 형식입니다. id, title, notes 배열이 필요합니다.",
+        fileTypeErrorMsg: "⚠️ JSON 파일만 업로드할 수 있습니다.",
+        parseErrMsg: "⚠️ JSON을 파싱할 수 없습니다. 파일 형식을 확인해 주세요.",
+        importSuccessMsg: "✅ 가져오기 완료: {added}개 추가됨, {updated}개 업데이트됨.",
+        clearSuccessMsg: "모든 커스텀 레벨이 지워졌습니다.",
+        l1: {
+          badge: "입문",
+          title: "도레미 기초",
+          desc: "옥타브 C4에서 7가지 기본 도레미 손기호(도, 레, 미...)를 배웁니다.",
+          metaNotes: "🎵 7개 음표",
+          metaTask: "⭐ 기본 연습",
+          play: "재생"
+        },
+        l2: {
+          badge: "쉬움",
+          title: "도레미 상승 및 하강",
+          desc: "음계를 오르내리며 리듬을 일정하게 유지하고 타이밍에 맞춥니다!",
+          metaNotes: "🎵 15개 음표",
+          metaTask: "⭐ 일정한 리듬",
+          play: "재생"
+        },
+        l3: {
+          badge: "쉬움",
+          title: "비행기 (Mary Had a Little Lamb)",
+          desc: "도, 레, 미, 솔 사이의 전환을 연습하는 고전적인 동요.",
+          metaNotes: "🎵 26개 음표",
+          metaTask: "⭐ 빠른 전환",
+          play: "재생"
+        },
+        l4: {
+          badge: "보통",
+          title: "반짝반짝 작은 별",
+          desc: "적당한 템포로 거의 모든 도레미 음표를 사용하는 더 긴 동요.",
+          metaNotes: "🎵 42개 음표",
+          metaTask: "⭐ 리듬 도전",
+          play: "재생"
+        }
+      }
+    };
+
+    // DOM References
+    const langSelector = document.getElementById("lang-selector-header");
+    const menuTagline = document.getElementById("menu-tagline");
+    const selectTitle = document.getElementById("select-title");
+    const selectSubtitle = document.getElementById("select-subtitle");
+    const gameplayModeLabel = document.getElementById("gameplay-mode-label");
+    const btnModePractice = document.getElementById("btn-mode-practice");
+    const btnModeChallenge = document.getElementById("btn-mode-challenge");
+    const tabCoreLessons = document.getElementById("tab-core-lessons");
+    const tabCustomLevels = document.getElementById("tab-custom-levels");
+    const sectionCoreLessons = document.getElementById("section-core-lessons");
+    const sectionCustomLevels = document.getElementById("section-custom-levels");
+    const defaultLevelsHeading = document.getElementById("default-levels-heading");
+    const customLevelsHeading = document.getElementById("custom-levels-heading");
+    const dropzoneText = document.getElementById("dropzone-text");
+    const dropzoneHint = document.getElementById("dropzone-hint");
+    const importedHeading = document.getElementById("imported-heading");
+    const btnClearCustomLevels = document.getElementById("btn-clear-custom-levels");
+    const customLevelsGrid = document.getElementById("custom-levels-grid");
+
+    const l1Badge = document.getElementById("l1-badge");
+    const l1Title = document.getElementById("l1-title");
+    const l1Desc = document.getElementById("l1-desc");
+    const l1MetaNotes = document.getElementById("l1-meta-notes");
+    const l1MetaTask = document.getElementById("l1-meta-task");
+    const l1PlayBtn = document.getElementById("l1-play-btn");
+
+    const l2Badge = document.getElementById("l2-badge");
+    const l2Title = document.getElementById("l2-title");
+    const l2Desc = document.getElementById("l2-desc");
+    const l2MetaNotes = document.getElementById("l2-meta-notes");
+    const l2MetaTask = document.getElementById("l2-meta-task");
+    const l2PlayBtn = document.getElementById("l2-play-btn");
+
+    const l3Badge = document.getElementById("l3-badge");
+    const l3Title = document.getElementById("l3-title");
+    const l3Desc = document.getElementById("l3-desc");
+    const l3MetaNotes = document.getElementById("l3-meta-notes");
+    const l3MetaTask = document.getElementById("l3-meta-task");
+    const l3PlayBtn = document.getElementById("l3-play-btn");
+
+    const l4Badge = document.getElementById("l4-badge");
+    const l4Title = document.getElementById("l4-title");
+    const l4Desc = document.getElementById("l4-desc");
+    const l4MetaNotes = document.getElementById("l4-meta-notes");
+    const l4MetaTask = document.getElementById("l4-meta-task");
+    const l4PlayBtn = document.getElementById("l4-play-btn");
+
+    const dropzone = document.getElementById("custom-level-dropzone");
+    const fileInput = document.getElementById("custom-level-file-input");
+    const feedback = document.getElementById("custom-level-feedback");
+
+    // Save referrer directory for redirect back
+    localStorage.setItem("signquest_referrer", "root");
+
+    // Initialize Language & Game Mode
+    let currentLang = localStorage.getItem("signquest_lang") || "en";
+    let gameMode = localStorage.getItem("signquest_game_mode") || "challenge";
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem("signquest_lang", lang);
+      langSelector.value = lang;
+
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
+      menuTagline.innerText = dict.tagline;
+      selectTitle.innerText = dict.title;
+      selectSubtitle.innerText = dict.subtitle;
+      gameplayModeLabel.innerText = dict.gameplayMode;
+      btnModePractice.innerText = dict.practice;
+      btnModeChallenge.innerText = dict.challenge;
+      if (tabCoreLessons) tabCoreLessons.innerText = "🎵 " + dict.coreLessons;
+      if (tabCustomLevels) tabCustomLevels.innerText = "📂 " + dict.importTitle;
+      defaultLevelsHeading.innerText = "🎵 " + dict.coreLessons;
+      customLevelsHeading.innerText = "📂 " + dict.importTitle;
+      dropzoneText.innerHTML = dict.dropzoneText.replace("click to browse", "<u>click to browse</u>");
+      dropzoneHint.innerText = dict.dropzoneHint;
+      importedHeading.innerText = dict.importedTitle;
+      btnClearCustomLevels.innerText = "🗑️ " + dict.clearAll;
+
+      l1Badge.innerText = dict.l1.badge;
+      l1Title.innerText = dict.l1.title;
+      l1Desc.innerText = dict.l1.desc;
+      l1MetaNotes.innerText = dict.l1.metaNotes;
+      l1MetaTask.innerText = dict.l1.metaTask;
+      l1PlayBtn.innerText = dict.l1.play;
+
+      l2Badge.innerText = dict.l2.badge;
+      l2Title.innerText = dict.l2.title;
+      l2Desc.innerText = dict.l2.desc;
+      l2MetaNotes.innerText = dict.l2.metaNotes;
+      l2MetaTask.innerText = dict.l2.metaTask;
+      l2PlayBtn.innerText = dict.l2.play;
+
+      l3Badge.innerText = dict.l3.badge;
+      l3Title.innerText = dict.l3.title;
+      l3Desc.innerText = dict.l3.desc;
+      l3MetaNotes.innerText = dict.l3.metaNotes;
+      l3MetaTask.innerText = dict.l3.metaTask;
+      l3PlayBtn.innerText = dict.l3.play;
+
+      l4Badge.innerText = dict.l4.badge;
+      l4Title.innerText = dict.l4.title;
+      l4Desc.innerText = dict.l4.desc;
+      l4MetaNotes.innerText = dict.l4.metaNotes;
+      l4MetaTask.innerText = dict.l4.metaTask;
+      l4PlayBtn.innerText = dict.l4.play;
+
+      renderCustomSongs();
+    }
+
+    function setGameMode(mode) {
+      gameMode = mode;
+      localStorage.setItem("signquest_game_mode", mode);
+
+      if (mode === "practice") {
+        btnModePractice.classList.add("active");
+        btnModeChallenge.classList.remove("active");
+      } else {
+        btnModeChallenge.classList.add("active");
+        btnModePractice.classList.remove("active");
+      }
+
+      updatePlayButtonsWithMode(mode);
+    }
+
+    function updatePlayButtonsWithMode(mode) {
+      document.querySelectorAll("a.play-btn").forEach(link => {
+        let href = link.getAttribute("href");
+        if (!href) return;
+
+        let basePath = href.split('?')[0];
+        let queryStr = href.split('?')[1] || "";
+        let params = new URLSearchParams(queryStr);
+        params.set("mode", mode);
+
+        link.setAttribute("href", basePath + "?" + params.toString());
+      });
+    }
+
+    // Custom level rendering
+    function renderCustomSongs() {
+      let customList = [];
+      try {
+        const raw = localStorage.getItem("signquest_custom_exercises");
+        if (raw) customList = JSON.parse(raw);
+      } catch (e) {
+        customList = [];
+      }
+
+      customLevelsGrid.innerHTML = "";
+
+      if (customList.length === 0) {
+        btnClearCustomLevels.style.display = "none";
+        const msg = currentLang === "vi"
+          ? TRANSLATIONS.vi.noCustomMsg
+          : currentLang === "ko"
+            ? TRANSLATIONS.ko.noCustomMsg
+            : TRANSLATIONS.en.noCustomMsg;
+        customLevelsGrid.innerHTML = `<div style="grid-column: 1 / -1; padding: 1.5rem; text-align: center; color: #64748b; font-weight: 500; font-style: italic;">${msg}</div>`;
+        return;
+      }
+
+      btnClearCustomLevels.style.display = "block";
+
+      customList.forEach(ex => {
+        const card = document.createElement("div");
+        card.className = "song-card";
+
+        const cardHeader = document.createElement("div");
+        cardHeader.className = "song-card-header";
+
+        const badge = document.createElement("span");
+        badge.className = "difficulty-badge diff-custom";
+        badge.innerText = currentLang === "vi" ? "Tự tạo" : currentLang === "ko" ? "사용자 정의" : "Custom";
+
+        const deleteIcon = document.createElement("button");
+        deleteIcon.className = "control-btn delete-btn";
+        deleteIcon.innerText = "🗑️";
+        deleteIcon.title = "Delete Level";
+        deleteIcon.addEventListener("click", () => deleteCustomSong(ex.id));
+
+        cardHeader.appendChild(badge);
+        cardHeader.appendChild(deleteIcon);
+
+        const title = document.createElement("h4");
+        title.className = "song-title";
+        title.innerText = ex.title;
+
+        const desc = document.createElement("p");
+        desc.className = "song-desc";
+        desc.innerText = ex.description || "";
+
+        const meta = document.createElement("div");
+        meta.className = "song-meta";
+        const notesCount = ex.notes ? ex.notes.length : 0;
+        meta.innerHTML = `<span>🎵 ${notesCount} Notes</span><span>⚡ BPM: ${ex.bpm}</span>`;
+
+        const playBtn = document.createElement("a");
+        playBtn.className = "control-btn play-btn play-btn-primary";
+        playBtn.innerText = currentLang === "vi" ? "Chơi" : currentLang === "ko" ? "재생" : "Play";
+        playBtn.href = `music_game.html?id=${ex.id}`;
+
+        card.appendChild(cardHeader);
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(meta);
+        card.appendChild(playBtn);
+
+        customLevelsGrid.appendChild(card);
+      });
+    }
+
+    function deleteCustomSong(id) {
+      try {
+        let customList = JSON.parse(localStorage.getItem("signquest_custom_exercises") || "[]");
+        customList = customList.filter(ex => ex.id !== id);
+        localStorage.setItem("signquest_custom_exercises", JSON.stringify(customList));
+        renderCustomSongs();
+        showFeedback("Level deleted successfully.", "success");
+      } catch (err) {
+        showFeedback("Error deleting level.", "error");
+      }
+    }
+
+    function showFeedback(msg, type) {
+      const colors = {
+        success: { bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.3)", text: "#10b981" },
+        error: { bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.3)", text: "#ef4444" },
+        neutral: { bg: "rgba(30,41,59,0.05)", border: "rgba(30,41,59,0.1)", text: "#475569" }
+      };
+      const c = colors[type] || colors.neutral;
+      feedback.style.cssText = `
+        display: block;
+        background: ${c.bg};
+        border: 2px solid ${c.border};
+        color: ${c.text};
+        font-weight: 700;
+        margin-top: 0.5rem;
+      `;
+      feedback.innerText = msg;
+    }
+
+    function processFile(file) {
+      if (!file.name.endsWith(".json") && file.type !== "application/json") {
+        showFeedback("⚠️ File must be a .json file.", "error");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const raw = JSON.parse(e.target.result);
+          const levels = Array.isArray(raw) ? raw : [raw];
+
+          for (const lv of levels) {
+            if (!lv.id || !lv.title || !Array.isArray(lv.notes)) {
+              showFeedback("⚠️ Invalid level format. Must have id, title, and notes array.", "error");
+              return;
+            }
+          }
+
+          let customList = [];
+          try {
+            const existing = localStorage.getItem("signquest_custom_exercises");
+            if (existing) customList = JSON.parse(existing);
+          } catch (_) { }
+
+          let added = 0, updated = 0;
+          for (const lv of levels) {
+            const idx = customList.findIndex(c => c.id === lv.id);
+            if (idx !== -1) {
+              customList[idx] = lv;
+              updated++;
+            } else {
+              customList.push(lv);
+              added++;
+            }
+          }
+
+          localStorage.setItem("signquest_custom_exercises", JSON.stringify(customList));
+          renderCustomSongs();
+          showFeedback(`✅ Imported: ${added} added, ${updated} updated.`, "success");
+        } catch (err) {
+          showFeedback("⚠️ Could not parse JSON. Check file format.", "error");
+        }
+      };
+      reader.onloadend = () => {
+        fileInput.value = ""; // Clear file input so it can be re-triggered
+      };
+      reader.readAsText(file);
+    }
+
+    // Set up listeners
+    dropzone.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) processFile(file);
+    });
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      const file = e.dataTransfer.files[0];
+      if (file) processFile(file);
+    });
+
+    btnClearCustomLevels.addEventListener("click", () => {
+      if (confirm(currentLang === "vi" ? "Bạn có chắc chắn muốn xóa toàn bộ màn chơi tự tạo?" : "Are you sure you want to delete all custom levels?")) {
+        localStorage.removeItem("signquest_custom_exercises");
+        renderCustomSongs();
+        showFeedback("All custom levels cleared.", "neutral");
+      }
+    });
+
+    btnModePractice.addEventListener("click", () => setGameMode("practice"));
+    btnModeChallenge.addEventListener("click", () => setGameMode("challenge"));
+
+    langSelector.addEventListener("change", (e) => {
+      updateLanguage(e.target.value);
+    });
+
+    function setActiveTab(tab) {
+      if (tab === "core") {
+        tabCoreLessons.classList.add("active");
+        tabCustomLevels.classList.remove("active");
+        sectionCoreLessons.style.display = "";
+        sectionCustomLevels.style.display = "none";
+        localStorage.setItem("signquest_active_tab", "core");
+      } else {
+        tabCustomLevels.classList.add("active");
+        tabCoreLessons.classList.remove("active");
+        sectionCustomLevels.style.display = "";
+        sectionCoreLessons.style.display = "none";
+        localStorage.setItem("signquest_active_tab", "custom");
+      }
+    }
+
+    tabCoreLessons.addEventListener("click", () => setActiveTab("core"));
+    tabCustomLevels.addEventListener("click", () => setActiveTab("custom"));
+
+    // Run Language & Game Mode initialisation
+    updateLanguage(currentLang);
+    setGameMode(gameMode);
+
+    // Run active tab initialisation
+    let activeTab = localStorage.getItem("signquest_active_tab") || "core";
+    setActiveTab(activeTab);
+  </script>
+</body>
+
+</html>

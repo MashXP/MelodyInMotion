@@ -13,8 +13,8 @@ export function generateLabels() {
     
     const labelCell = document.createElement("div");
     labelCell.className = "piano-label-cell";
-    labelCell.style.color = detail.color;
-    labelCell.style.borderBottomColor = "rgba(255, 255, 255, 0.06)";
+    labelCell.style.borderLeft = `6px solid ${detail.color}`;
+    labelCell.style.paddingLeft = "8px";
     labelCell.innerHTML = `<span style="font-family: 'Outfit'; font-weight: 800;">${detail.label}</span><span style="font-family: monospace; font-size: 0.65rem; opacity: 0.6; margin-left: 4px;">C${octave}</span>`;
     dom.pianoRollLabels.appendChild(labelCell);
   }

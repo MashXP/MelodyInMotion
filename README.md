@@ -29,6 +29,10 @@ A full rhythm game built on the Solfège sign system:
   - **Tutorial** – Scrolling timeline with per-note hold instructions; auto-advances on successful sign hold with a progress bar.
   - **Practice** – Step-by-step note advance; pauses until the correct sign is shown. No time pressure.
   - **Challenge** – Real-time BPM-locked scoring with a both-hands-visible gate countdown, combo multipliers, per-note accuracy ratings (Perfect / Good / Okay / Miss), and a rank system (S / A / B / C).
+- **Interactive Visual Guide Panel:** Real-time visual guide panel displaying the target ASL handsign image (`public/handsign/${detail.label}.png`) for the active note to assist learners.
+- **Rendering Performance Caching:** caches staff lines and treble clefs onto an offscreen canvas (`_staticCanvas`) to avoid frame redraw lag, and debounces HUD DOM updates.
+- **Automatic Camera Start:** Level playback triggers automatically as soon as the note hand is detected by the webcam.
+- **Dynamic Particle Bursts:** Spawns color-coded hit particle explosions (`spawnHitBurst`) at the timeline hit-zone on successful note impacts.
 - **4 Built-in Levels:** Tutorial: Solfège Basics, Level 1: Do-Re-Mi Ascent & Descent, Level 2: Twinkle Twinkle Little Star, Level 3: Mary Had a Little Lamb.
 - **Song Maker Integration:** Create your own levels in the Song Maker and play them instantly in the Rhythm Challenge.
 - **Custom Level Import:** Drag-and-drop or browse to upload a level JSON file directly into the Level Directory drawer — no reload required.
@@ -52,6 +56,8 @@ A full rhythm game built on the Solfège sign system:
 ```text
 SignQuest/
 ├── index.html              # ASL Fingerspelling Sandbox
+├── intro.html              # Home/Welcome page
+├── level-select.html       # Level Selection Screen
 ├── music.html              # SignMusic Studio
 ├── music_game.html         # SignMusic Rhythm Challenge
 ├── song_maker.html         # Song Maker / Level Editor
@@ -132,7 +138,7 @@ npx http-server ./ -p 8000
 
 ### Rhythm Challenge
 1. Open the **Level Directory** (🎵 Level List button) and select an exercise.
-2. Choose **Practice** or **Challenge** mode.
+2. Choose **Practice** or **Challenge** mode (the active gameplay mode indicator turns red).
 3. Click **▶️ Start Level** — the controls dock pulls up from the bottom automatically during gameplay.
 4. **Tutorial:** Follow the on-screen instruction and hold the sign until the progress bar fills.
 5. **Practice:** Show the correct sign to advance the timeline — it pauses until you match.

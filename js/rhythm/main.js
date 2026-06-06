@@ -124,9 +124,35 @@ async function loadExercises() {
 
       populateSongList();
       if (gameState.exercises.length > 0) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLevelId = urlParams.get("level") || urlParams.get("id");
+        const urlMode = urlParams.get("mode");
+        
+        if (urlMode === "practice" || urlMode === "challenge") {
+          gameState.gameMode = urlMode;
+          localStorage.setItem("signquest_game_mode", urlMode);
+        }
+        
+        let targetExerciseId = null;
+        if (urlLevelId) {
+          if (!isNaN(urlLevelId)) {
+            const index = parseInt(urlLevelId) - 1;
+            if (index >= 0 && index < gameState.exercises.length) {
+              targetExerciseId = gameState.exercises[index].id;
+            }
+          } else {
+            const exists = gameState.exercises.some(ex => ex.id === urlLevelId);
+            if (exists) {
+              targetExerciseId = urlLevelId;
+            }
+          }
+        }
+        
         const savedExerciseId = localStorage.getItem("signquest_current_exercise_id");
-        const exists = gameState.exercises.some(ex => ex.id === savedExerciseId);
-        if (savedExerciseId && exists) {
+        
+        if (targetExerciseId) {
+          selectExercise(targetExerciseId);
+        } else if (savedExerciseId && gameState.exercises.some(ex => ex.id === savedExerciseId)) {
           selectExercise(savedExerciseId);
         } else {
           selectExercise(gameState.exercises[0].id);

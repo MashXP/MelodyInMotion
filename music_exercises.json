@@ -3,7 +3,7 @@
     "id": "tutorial_solfege",
     "title": "Tutorial: Solfège Basics",
     "description": "Learn the 7 core Solfège hand signs at octave C4 (3 fingers on left hand). Show the sign and hold it to proceed.",
-    "isTutorial": true,
+    "isTutorial": false,
     "bpm": 60,
     "notes": [
       {

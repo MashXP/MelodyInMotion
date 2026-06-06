@@ -13,6 +13,7 @@ import {
 } from "./constants.js";
 
 let lastVideoTime = -1;
+let consecutiveLostFrames = 0;
 
 export function powerOnCamera() {
   dom.loadingOverlay.style.display = "flex";
@@ -135,9 +136,13 @@ export function processHandDetections(detections) {
       if (gameState.consecutiveLeftFingersCount >= threshold) {
         gameState.debouncedLeftFingers = rawFingers;
         if (gameState.debouncedLeftFingers >= 1 && gameState.debouncedLeftFingers <= 5) {
-          gameState.currentDetectedOctave = gameState.debouncedLeftFingers + 1;
-          gameState.lastValidOctave = gameState.currentDetectedOctave;
-          gameState.octaveLossTimer = 0; // reset grace timer
+          // Original dynamic octave logic (commented out):
+          // gameState.currentDetectedOctave = gameState.debouncedLeftFingers + 1;
+          // gameState.lastValidOctave = gameState.currentDetectedOctave;
+          
+          // Temporarily locked to C4:
+          gameState.currentDetectedOctave = 4;
+          gameState.lastValidOctave = 4;
         }
       }
     } else {
@@ -145,36 +150,45 @@ export function processHandDetections(detections) {
       gameState.consecutiveLeftFingersCount = 1;
     }
     
-    // Display live octave status
-    dom.liveOctaveVal.innerText = `C${gameState.currentDetectedOctave} (${gameState.debouncedLeftFingers} fingers)`;
+    // Display live octave status (either Setting with finger count or Locked)
+    if (dom.liveOctaveVal) {
+      // Original display logic (commented out):
+      // if (rawFingers >= 1 && rawFingers <= 5) {
+      //   dom.liveOctaveVal.innerText = `C${gameState.currentDetectedOctave} (${rawFingers} fingers)`;
+      // } else {
+      //   dom.liveOctaveVal.innerText = `C${gameState.currentDetectedOctave} (Locked)`;
+      // }
+      
+      // Temporarily locked to C4:
+      dom.liveOctaveVal.innerText = `C4 (Locked)`;
+    }
     
     if (gameState.showSkeleton) {
       drawSkeleton(dom.canvasCtx, octaveHandLandmarks, "#06b6d4");
     }
   } else {
-    // If hand is missing, increment grace loss timer
-    if (gameState.isPlayingGame && !gameState.currentExercise.isTutorial) {
-      // In game, increment grace period timer (estimate dt as 1/60s if not running game loop)
-      const frameTime = gameState.lastUpdate ? (performance.now() - gameState.lastUpdate) / 1000 : 0.016;
-      gameState.octaveLossTimer += frameTime;
+    // Retain persistent toggled octave when octave hand is not present
+    if (dom.liveOctaveVal) {
+      // Original display logic (commented out):
+      // dom.liveOctaveVal.innerText = `C${gameState.currentDetectedOctave} (Locked)`;
       
-      if (gameState.octaveLossTimer < OCTAVE_LOSS_GRACE_PERIOD) {
-        // Retain last octave during grace period
-        gameState.currentDetectedOctave = gameState.lastValidOctave;
-        gameState.debouncedLeftFingers = gameState.currentDetectedOctave - 1;
-        dom.liveOctaveVal.innerText = `C${gameState.currentDetectedOctave} (Grace Active)`;
-      } else {
-        gameState.debouncedLeftFingers = 0;
-        dom.liveOctaveVal.innerText = "No hand";
-      }
-    } else {
-      gameState.debouncedLeftFingers = 0;
-      dom.liveOctaveVal.innerText = "No hand";
+      // Temporarily locked to C4:
+      dom.liveOctaveVal.innerText = `C4 (Locked)`;
     }
   }
 
   // 2. Process Note Hand
   if (noteHandLandmarks) {
+    consecutiveLostFrames = 0;
+    gameState.noteHandVisible = true;
+
+    // Auto-start level when hand is visible
+    if (!gameState.isPlayingGame && 
+        (!dom.resultsOverlay || !dom.resultsOverlay.classList.contains("active")) && 
+        !gameState.isCalibratingAutomated) {
+      import("./game_modes.js").then(m => m.startGame());
+    }
+    
     // Automated Capture logic
     if (gameState.isCalibratingAutomated && gameState.captureFlag) {
       gameState.captureFlag = false; // Reset immediately to prevent multiple captures in same interval
@@ -227,7 +241,9 @@ export function processHandDetections(detections) {
     
     // Update live sign status display
     const detail = NOTE_DETAILS[gameState.currentDetectedNote];
-    dom.liveSignVal.innerText = detail ? `${detail.label} (${detail.key})` : "None";
+    if (dom.liveSignVal) {
+      dom.liveSignVal.innerText = detail ? `${detail.label} (${detail.key})` : "None";
+    }
 
     if (gameState.showSkeleton) {
       drawSkeleton(dom.canvasCtx, noteHandLandmarks, "#d946ef");
@@ -272,9 +288,14 @@ export function processHandDetections(detections) {
       }
     }
   } else {
-    dom.liveSignVal.innerText = "None";
-    if (!gameState.bothHandsVisible && gameState.octaveLossTimer >= OCTAVE_LOSS_GRACE_PERIOD) {
+    consecutiveLostFrames++;
+    if (consecutiveLostFrames >= LOSS_THRESHOLD) {
+      gameState.noteHandVisible = false;
+      if (dom.liveSignVal) {
+        dom.liveSignVal.innerText = "None";
+      }
       gameState.currentDetectedNote = "-";
+      gameState.pendingNote = "-";
     }
 
     // Render calibration ghost in the center if note hand is missing

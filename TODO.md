@@ -1,9 +1,11 @@
 
-- [ ] Tmr: subkey??
-- [ ] Better visuals
-- [ ] Make better code base structure. 
-- [ ] More animations and 🌟 effects 🌟 (sound effects)
-- [ ] Introduction screen
-- [ ] Main nav page, need better content navigation
-- [ ] Host (on Github maybe?)
-- [ ] About page, github code
+- DONE: Tmr: subkey??
+    - Styling is not applied to all pages: ASL, STUDIO
+- Better visuals
+- Make better code base structure. 
+- More animations and 🌟 effects 🌟 (sound effects)
+- Introduction screen
+- Main nav page, need better content navigation
+- Host (on Github maybe?)
+- About page, github code
+- Highlight the main octave in maker and dim the non-main

@@ -36,6 +36,7 @@ export const dom = {
   tutorialProgressFill: null,
   tutorialTimeVal: null,
   btnSkipTutorial: null,
+  handsignHintImg: null,
   resultsOverlay: null,
   resultsLevelTitle: null,
   resultsSubtitle: null,
@@ -110,6 +111,7 @@ export function initDom() {
   dom.tutorialProgressFill = document.getElementById("tutorial-progress-fill");
   dom.tutorialTimeVal = document.getElementById("tutorial-time-val");
   dom.btnSkipTutorial = document.getElementById("btn-skip-tutorial");
+  dom.handsignHintImg = document.getElementById("handsign-hint-img");
   dom.resultsOverlay = document.getElementById("results-overlay");
   dom.resultsLevelTitle = document.getElementById("results-level-title");
   dom.resultsSubtitle = document.getElementById("results-subtitle");

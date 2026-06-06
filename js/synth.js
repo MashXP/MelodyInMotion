@@ -91,10 +91,10 @@ function startNodes(freq) {
   osc1.type = waveform;
   osc1.frequency.setValueAtTime(freq, now);
 
-  // Create secondary detuned oscillator for chorus/warmth
+  // Create secondary oscillator for warmth (no detune to prevent flanging)
   osc2 = audioCtx.createOscillator();
   osc2.type = "sine";
-  osc2.frequency.setValueAtTime(freq * 1.005, now);
+  osc2.frequency.setValueAtTime(freq, now);
 
   // Create sub-oscillator for bass richness (one octave down)
   subOsc = audioCtx.createOscillator();
@@ -235,7 +235,7 @@ export function playNote(freq, noteName, octave) {
 
     osc2.frequency.cancelScheduledValues(now);
     osc2.frequency.setValueAtTime(osc2.frequency.value, now);
-    osc2.frequency.exponentialRampToValueAtTime(freq * 1.005, now + 0.08);
+    osc2.frequency.exponentialRampToValueAtTime(freq, now + 0.08);
 
     subOsc.frequency.cancelScheduledValues(now);
     subOsc.frequency.setValueAtTime(subOsc.frequency.value, now);

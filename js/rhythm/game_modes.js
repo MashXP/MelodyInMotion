@@ -6,7 +6,7 @@ import {
   TUTORIAL_REQUIRED_HOLD,
   getFrequency
 } from "./constants.js";
-import { drawTrack, drawTrackStatic } from "./renderer.js";
+import { drawTrack, drawTrackStatic, spawnHitBurst } from "./renderer.js";
 import { updateHudUI, closeAllDrawers, minimizeControls, revealControls } from "./ui.js";
 
 let animationFrameId = null;
@@ -39,22 +39,22 @@ export function startGame() {
   gameState.isPracticePaused = false;
   dom.practicePauseAlert.style.display = "none";
 
-  dom.btnGamePlay.innerHTML = `<span>⏸️ Pause Level</span>`;
-  dom.btnGameStop.disabled = false;
+  if (dom.btnGamePlay) dom.btnGamePlay.innerHTML = `<span>⏸️ Pause Level</span>`;
+  if (dom.btnGameStop) dom.btnGameStop.disabled = false;
   dom.resultsOverlay.classList.remove("active");
 
   // Show progress HUD
   dom.hudProgressBg.style.display = "block";
   dom.hudProgressFill.style.width = "0%";
 
+  dom.tutorialBox.style.display = "block";
   if (gameState.currentExercise.isTutorial) {
-    dom.tutorialBox.style.display = "block";
     gameState.tutorialCurrentNoteIndex = 0;
     gameState.tutorialHoldDuration = 0;
     gameState.tutorialScrolling = true;
     loadTutorialStep();
   } else {
-    dom.tutorialBox.style.display = "none";
+    updateActiveGuideUI();
   }
 
   // Render first frame static at beat 0
@@ -65,7 +65,7 @@ export function startGame() {
   // If in Challenge mode, perform countdown before starting
   if (gameState.gameMode === "challenge" && !gameState.currentExercise.isTutorial) {
     dom.gameCountdown.style.display = "flex";
-    dom.countdownNumber.innerText = "👋 Show both hands to begin!";
+    dom.countdownNumber.innerText = "👋 Show sign hand to begin!";
     dom.countdownNumber.style.fontSize = "3.2rem";
     
     gameState.isPlayingGame = true;
@@ -76,7 +76,7 @@ export function startGame() {
         return;
       }
 
-      if (gameState.bothHandsVisible) {
+      if (gameState.noteHandVisible) {
         dom.countdownNumber.style.fontSize = "6rem";
         startLevelCountdown(() => {
           gameState.gameStartTime = performance.now();
@@ -130,8 +130,8 @@ export function stopGame() {
   gameState.lastSynthOctave = -1;
   gameState.synthPlaying = false;
 
-  dom.btnGamePlay.innerHTML = `<span>▶️ Start Level</span>`;
-  dom.btnGameStop.disabled = true;
+  if (dom.btnGamePlay) dom.btnGamePlay.innerHTML = `<span>▶️ Start Level</span>`;
+  if (dom.btnGameStop) dom.btnGameStop.disabled = true;
   dom.tutorialBox.style.display = "none";
   drawTrackStatic();
 }
@@ -196,16 +196,24 @@ export function loadTutorialStep() {
     finishLevel();
     return;
   }
-  dom.tutorialTitleVal.innerText = `Tutorial: ${NOTE_DETAILS[target.note].label} (C${target.octave})`;
-  dom.tutorialInstructionVal.innerText = target.instruction || `Show the ${target.note} hand shape at octave C${target.octave} to pass.`;
+  if (dom.tutorialTitleVal) {
+    dom.tutorialTitleVal.innerText = `Tutorial: ${NOTE_DETAILS[target.note].label} (C${target.octave})`;
+  }
+  if (dom.tutorialInstructionVal) {
+    dom.tutorialInstructionVal.innerText = target.instruction || `Show the ${target.note} hand shape at octave C${target.octave} to pass.`;
+  }
   gameState.tutorialHoldDuration = 0;
   updateTutorialUI();
 }
 
 export function updateTutorialUI() {
-  const percent = Math.min(100, (gameState.tutorialHoldDuration / TUTORIAL_REQUIRED_HOLD) * 100);
-  dom.tutorialProgressFill.style.width = `${percent}%`;
-  dom.tutorialTimeVal.innerText = `${gameState.tutorialHoldDuration.toFixed(1)}s / ${TUTORIAL_REQUIRED_HOLD.toFixed(1)}s`;
+  if (dom.tutorialProgressFill) {
+    const percent = Math.min(100, (gameState.tutorialHoldDuration / TUTORIAL_REQUIRED_HOLD) * 100);
+    dom.tutorialProgressFill.style.width = `${percent}%`;
+  }
+  if (dom.tutorialTimeVal) {
+    dom.tutorialTimeVal.innerText = `${gameState.tutorialHoldDuration.toFixed(1)}s / ${TUTORIAL_REQUIRED_HOLD.toFixed(1)}s`;
+  }
 }
 
 export function skipTutorial() {
@@ -243,6 +251,8 @@ export function gameLoop(now) {
   // Draw timeline track
   drawTrack();
 
+  updateActiveGuideUI();
+
   animationFrameId = requestAnimationFrame(gameLoop);
 }
 
@@ -251,9 +261,9 @@ export function processTutorialStep(dt) {
   if (!target) return;
 
   const noteTimeInSeconds = (target.beat * 60) / gameState.currentExercise.bpm;
-  const octaveActive = gameState.debouncedLeftFingers >= 1;
-  const userMatched = (gameState.currentDetectedNote === target.note) && 
-                        (octaveActive && gameState.currentDetectedOctave === target.octave);
+  const userMatched = ((gameState.currentDetectedNote === target.note) && 
+                        (gameState.currentDetectedOctave === target.octave)) || 
+                        (target.octave !== 4);
 
   // 1. Scroll timeline normally until we hit the note start
   if (gameState.currentBeat < target.beat) {
@@ -266,70 +276,71 @@ export function processTutorialStep(dt) {
     }
     
     // Update progress bar
-    const progressPercent = (gameState.tutorialCurrentNoteIndex / gameState.activeNotesInLevel.length) * 100;
-    dom.hudProgressFill.style.width = `${progressPercent}%`;
+    if (dom.hudProgressFill) {
+      const progressPercent = (gameState.tutorialCurrentNoteIndex / gameState.activeNotesInLevel.length) * 100;
+      dom.hudProgressFill.style.width = `${progressPercent}%`;
+    }
     return;
   }
 
-  // 2. We are in the note span
-  if (gameState.currentBeat < target.beat + target.duration) {
-    if (userMatched) {
-      // User matches note: scroll forward and play sound
-      gameState.gameTime += dt;
-      gameState.currentBeat = (gameState.gameTime * gameState.currentExercise.bpm) / 60;
-      
-      // Update tutorial progress fill to match current hold completion ratio
-      const holdProgressPercent = ((gameState.currentBeat - target.beat) / target.duration) * 100;
-      dom.tutorialProgressFill.style.width = `${holdProgressPercent}%`;
-      dom.tutorialTimeVal.innerText = `${(gameState.currentBeat - target.beat).toFixed(1)}s / ${target.duration.toFixed(1)}s`;
+  // 2. We are at the note start: wait for user matching and holding
+  if (userMatched) {
+    // Play note synth if not already playing
+    if (gameState.lastSynthNote !== target.note || gameState.lastSynthOctave !== target.octave || !gameState.synthPlaying) {
+      const freq = getFrequency(target.note, target.octave);
+      playNote(freq, target.note, target.octave);
+      gameState.lastSynthNote = target.note;
+      gameState.lastSynthOctave = target.octave;
+      gameState.synthPlaying = true;
+    }
 
-      if (gameState.lastSynthNote !== target.note || gameState.lastSynthOctave !== target.octave || !gameState.synthPlaying) {
-        const freq = getFrequency(target.note, target.octave);
-        playNote(freq, target.note, target.octave);
-        gameState.lastSynthNote = target.note;
-        gameState.lastSynthOctave = target.octave;
-        gameState.synthPlaying = true;
-      }
-      
-      // If note duration is fully held and completed
-      if (gameState.currentBeat >= target.beat + target.duration) {
-        triggerBeep();
-        releaseNote();
-        gameState.synthPlaying = false;
-        gameState.lastSynthNote = "-";
-        gameState.lastSynthOctave = -1;
+    // Accumulate hold duration
+    gameState.tutorialHoldDuration += dt;
+    updateTutorialUI();
 
-        target.status = "completed";
-        gameState.noteStats.perfect++;
-        gameState.totalHits++;
-        gameState.score += 100;
-        gameState.combo++;
-        if (gameState.combo > gameState.maxCombo) gameState.maxCombo = gameState.combo;
-        updateHudUI();
+    if (gameState.tutorialHoldDuration >= TUTORIAL_REQUIRED_HOLD) {
+      // Note successfully completed!
+      target.status = "completed";
+      gameState.noteStats.perfect++;
+      gameState.totalHits++;
+      gameState.score += 100;
+      gameState.combo++;
+      if (gameState.combo > gameState.maxCombo) gameState.maxCombo = gameState.combo;
+      updateHudUI();
 
-        // Advance to next tutorial step
-        gameState.tutorialCurrentNoteIndex++;
-        if (gameState.tutorialCurrentNoteIndex < gameState.activeNotesInLevel.length) {
-          loadTutorialStep();
-        } else {
-          finishLevel();
-        }
-      }
-    } else {
-      // Cut off! Snap back to start of note
-      if (gameState.currentBeat > target.beat) {
-        gameState.currentBeat = target.beat;
-        gameState.gameTime = noteTimeInSeconds;
-        dom.tutorialProgressFill.style.width = "0%";
-        dom.tutorialTimeVal.innerText = `0.0s / ${target.duration.toFixed(1)}s`;
-      }
-      
+      // Release synth
       if (gameState.synthPlaying) {
         releaseNote();
         gameState.synthPlaying = false;
         gameState.lastSynthNote = "-";
         gameState.lastSynthOctave = -1;
       }
+
+      triggerBeep();
+
+      // Instantly advance timeline past this note
+      gameState.tutorialCurrentNoteIndex++;
+      if (gameState.tutorialCurrentNoteIndex < gameState.activeNotesInLevel.length) {
+        // Set timeline beat to start of next note or just past this note
+        gameState.currentBeat = target.beat + target.duration;
+        gameState.gameTime = (gameState.currentBeat * 60) / gameState.currentExercise.bpm;
+        loadTutorialStep();
+      } else {
+        gameState.currentBeat = target.beat + target.duration;
+        gameState.gameTime = (gameState.currentBeat * 60) / gameState.currentExercise.bpm;
+        finishLevel();
+      }
+    }
+  } else {
+    // Reset hold duration and stop synth if user breaks matching sign
+    gameState.tutorialHoldDuration = 0;
+    updateTutorialUI();
+
+    if (gameState.synthPlaying) {
+      releaseNote();
+      gameState.synthPlaying = false;
+      gameState.lastSynthNote = "-";
+      gameState.lastSynthOctave = -1;
     }
   }
 }
@@ -342,9 +353,9 @@ export function processPracticeStep(dt) {
   }
 
   const noteTimeInSeconds = (target.beat * 60) / gameState.currentExercise.bpm;
-  const octaveActive = gameState.debouncedLeftFingers >= 1;
-  const userMatched = (gameState.currentDetectedNote === target.note) && 
-                        (octaveActive && gameState.currentDetectedOctave === target.octave);
+  const userMatched = ((gameState.currentDetectedNote === target.note) && 
+                        (gameState.currentDetectedOctave === target.octave)) || 
+                        (target.octave !== 4);
 
   // 1. Scroll normally until we reach the note start
   if (gameState.currentBeat < target.beat) {
@@ -422,7 +433,6 @@ export function processPracticeStep(dt) {
 
 export function processRhythmEvaluation() {
   let allProcessed = true;
-  const octaveActive = gameState.debouncedLeftFingers >= 1;
 
   gameState.activeNotesInLevel.forEach(note => {
     const noteTimeInSeconds = (note.beat * 60) / gameState.currentExercise.bpm;
@@ -445,9 +455,11 @@ export function processRhythmEvaluation() {
         updateHudUI();
       } else if (timeDiff >= 0) {
         // Check inside hit window (since timeDiff is positive and <= 0.45 here)
-        const matchesNote = (gameState.currentDetectedNote === note.note) && (octaveActive && gameState.currentDetectedOctave === note.octave);
+        const matchesNote = ((gameState.currentDetectedNote === note.note) && (gameState.currentDetectedOctave === note.octave)) || (note.octave !== 4);
         if (matchesNote) {
           note.status = "hit";
+          // Fire particle burst ONCE at the moment of impact
+          spawnHitBurst(note.note, note.octave, NOTE_DETAILS[note.note]?.color);
           gameState.totalHits++;
           let addedScore = 0;
           let rating = "Okay";
@@ -494,7 +506,7 @@ export function processRhythmEvaluation() {
       const inHoldRegion = (gameState.gameTime >= noteTimeInSeconds && gameState.gameTime <= noteEndTimeInSeconds);
       
       if (inHoldRegion) {
-        const matchesNote = (gameState.currentDetectedNote === note.note) && (octaveActive && gameState.currentDetectedOctave === note.octave);
+        const matchesNote = ((gameState.currentDetectedNote === note.note) && (gameState.currentDetectedOctave === note.octave)) || (note.octave !== 4);
         if (matchesNote) {
           if (gameState.lastSynthNote !== note.note || gameState.lastSynthOctave !== note.octave || !gameState.synthPlaying) {
             const freq = getFrequency(note.note, note.octave);
@@ -632,4 +644,47 @@ export function finishLevel(isSkip = false) {
   }
 
   dom.resultsOverlay.classList.add("active");
+}
+
+export function getActiveNoteForGuide() {
+  if (!gameState.isPlayingGame || !gameState.activeNotesInLevel) return null;
+  if (gameState.currentExercise.isTutorial) {
+    return gameState.activeNotesInLevel[gameState.tutorialCurrentNoteIndex];
+  }
+  return gameState.activeNotesInLevel.find(n => n.status === "pending" || n.status === "active" || n.status === "hit");
+}
+
+export function updateActiveGuideUI() {
+  const target = getActiveNoteForGuide();
+  
+  if (!target) {
+    if (dom.tutorialTitleVal) dom.tutorialTitleVal.innerText = "Guide Panel";
+    if (dom.tutorialInstructionVal) dom.tutorialInstructionVal.innerText = "Select a level and press Start to play!";
+    if (dom.handsignHintImg) {
+      dom.handsignHintImg.src = "public/handsign/Do.png";
+      dom.handsignHintImg.style.display = "block";
+    }
+    return;
+  }
+
+  const detail = NOTE_DETAILS[target.note];
+  if (!detail) return;
+
+  if (dom.tutorialTitleVal) {
+    dom.tutorialTitleVal.innerText = gameState.currentExercise.isTutorial 
+      ? `Tutorial: ${detail.label} (C${target.octave})`
+      : `Active Note: ${detail.label} (C${target.octave})`;
+  }
+
+  if (dom.tutorialInstructionVal) {
+    dom.tutorialInstructionVal.innerText = target.instruction || `Show the ${target.note} hand shape at octave C${target.octave}.`;
+  }
+
+  if (dom.handsignHintImg) {
+    const newSrc = `public/handsign/${detail.label}.png`;
+    if (dom.handsignHintImg.getAttribute("src") !== newSrc) {
+      dom.handsignHintImg.src = newSrc;
+    }
+    dom.handsignHintImg.style.display = "block";
+  }
 }

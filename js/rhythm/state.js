@@ -11,7 +11,7 @@ export const gameState = {
   exercises: [],
   currentExercise: null,
   isPlayingGame: false,
-  gameMode: "challenge", // practice or challenge
+  gameMode: localStorage.getItem("signquest_game_mode") || "challenge", // practice or challenge
   gameStartTime: 0,
   gameTime: 0, // in seconds
   currentBeat: 0,
@@ -48,6 +48,7 @@ export const gameState = {
   currentDetectedNote: "-",
   currentDetectedOctave: 4,
   bothHandsVisible: false,
+  noteHandVisible: false,
   handLossCounter: 0,
 
   // Leniency/Grace variables for octave hand loss
@@ -83,6 +84,7 @@ export function resetGameStateStats() {
   gameState.gameTime = 0;
   gameState.currentBeat = 0;
   gameState.lastValidOctave = 4;
+  gameState.currentDetectedOctave = 4;
   gameState.octaveLossTimer = 0;
   gameState.tutorialScrolling = true;
 }
