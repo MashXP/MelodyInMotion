@@ -6,4 +6,133 @@
 @import url('styles/music.css');
 @import url('styles/music_game.css');
 @import url('styles/song_maker.css');
+@import url('styles/selection.css');
+@import url('styles/play_stage.css');
 
+/* --- WELCOME PAGE ONLY LAYOUT STYLES (from thienan) --- */
+.welcome-card-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 2.5rem !important;
+  margin: 0.5rem auto !important;
+  max-width: 600px !important;
+  width: 95% !important;
+  position: relative !important;
+  z-index: 1 !important;
+  background-color: #ffffff !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 20px !important;
+  box-shadow: 8px 8px 0px #1e293b !important;
+}
+
+.welcome-logo {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-title {
+  font-size: 3rem !important;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-subtitle {
+  color: #475569;
+  font-size: 1.35rem !important;
+  margin-bottom: 1.5rem !important;
+  font-weight: 500;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-buttons-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.85rem !important;
+  width: 100% !important;
+  max-width: 320px !important;
+  margin: 1.5rem auto 0 auto !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-gif {
+  max-width: 460px !important;
+  width: 100% !important;
+  height: auto !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 16px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  margin-bottom: 2rem !important;
+  display: block !important;
+  background-color: #ffffff !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.welcome-action-btn {
+  border: 3px solid #1e293b !important;
+  border-radius: 12px !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  transition: all 0.15s ease !important;
+  padding: 1.1rem 2rem !important;
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  display: block !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.welcome-action-btn:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px #1e293b !important;
+  background-color: #f8fafc !important;
+}
+
+.welcome-action-btn:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0px 0px 0px #1e293b !important;
+}
+
+.welcome-action-btn.btn-start {
+  background-color: #fef08a !important; /* Highlighter yellow */
+}
+.welcome-action-btn.btn-start:hover {
+  background-color: #fef9c3 !important;
+}
+
+/* Header style for title screen */
+.smol-header {
+  background: #ffffff !important;
+  border: 3.5px solid #1e293b !important;
+  border-radius: 16px !important;
+  box-shadow: 4px 4px 0px #1e293b !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0.4rem 1.2rem !important;
+  width: 100% !important;
+  max-width: 1400px !important;
+  margin: 0.25rem auto 0.5rem auto !important;
+}
+
+.smol-header .header-logo-img {
+  height: 42px !important;
+  width: auto !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  object-fit: contain !important;
+  margin-right: 0.6rem !important;
+}
