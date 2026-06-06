@@ -57,7 +57,7 @@ loadCustomTemplates();
 // Fetch calibrated templates from the JSON file
 export async function initTemplates() {
   try {
-    const response = await fetch("./asl_calibrated_templates.json");
+    const response = await fetch("public/asl_calibrated_templates.json");
     if (response.ok) {
       fileTemplates = await response.json();
       console.log("Successfully loaded calibrated templates from asl_calibrated_templates.json");

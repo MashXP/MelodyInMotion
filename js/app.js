@@ -1,7 +1,7 @@
 import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.8";
-import { drawSkeleton } from "./js/drawing.js";
-import { classifyASL } from "./js/classifier.js";
-import { getLetterTemplate, saveCustomTemplate, resetCustomTemplates, exportCustomTemplates, initTemplates } from "./js/templates.js";
+import { drawSkeleton } from "./drawing.js";
+import { classifyASL } from "./classifier.js";
+import { getLetterTemplate, saveCustomTemplate, resetCustomTemplates, exportCustomTemplates, initTemplates } from "./templates.js";
 import { 
   initGame, 
   getActiveTarget, 
@@ -11,7 +11,7 @@ import {
   playSuccessSound,
   isAllCompleted,
   setSoundMuted
-} from "./js/game.js";
+} from "./game.js";
 
 // --- DOM ELEMENTS ---
 const video = document.getElementById("webcam");
